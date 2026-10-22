@@ -46,6 +46,45 @@ quantity!(ForageKgDmPerHa, "kg DM/ha");
 quantity!(WaterMm, "mm");
 quantity!(BodyWeightKg, "kg live weight");
 quantity!(DryMatterIntakeKgPerDay, "kg DM/day");
+quantity!(AverageDailyGainKgPerDay, "kg live-weight gain/day");
+quantity!(EmptyBodyGainKgPerDay, "kg empty-body gain/day");
+
+/// Empirical span tabulated for the BR-CORTE EBG:ADG relationship.
+/// The equation should be flagged as extrapolation outside this interval.
+pub const EMPTY_BODY_GAIN_ADG_DOMAIN_KG_PER_DAY: (f64, f64) = (0.25, 1.75);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct EmptyBodyGainEstimateV1 {
+    pub kg_per_day: EmptyBodyGainKgPerDay,
+    pub within_published_domain: bool,
+}
+
+/// Convert average live-weight gain to estimated empty-body gain using
+/// BR-CORTE 2023, chapter 1, Eq. 1.12: EBG = 0.9630 * ADG^1.0151.
+///
+/// This is a weight-basis conversion, not a model predicting ADG from feed,
+/// climate, or behavior. The book tabulates its EBG:ADG ratio for ADG from
+/// 0.25 to 1.75 kg/day; estimates outside that span are returned but flagged.
+pub fn estimate_empty_body_gain_brcorte_2023_v1(
+    average_daily_gain: AverageDailyGainKgPerDay,
+) -> Result<EmptyBodyGainEstimateV1, InputError> {
+    let adg = average_daily_gain.get();
+    let estimate = 0.9630 * adg.powf(1.0151);
+    if !estimate.is_finite() {
+        return Err(InputError::ArithmeticOverflow {
+            name: "BR-CORTE empty-body gain estimate",
+        });
+    }
+
+    let within_published_domain = (EMPTY_BODY_GAIN_ADG_DOMAIN_KG_PER_DAY.0
+        ..=EMPTY_BODY_GAIN_ADG_DOMAIN_KG_PER_DAY.1)
+        .contains(&adg);
+
+    Ok(EmptyBodyGainEstimateV1 {
+        kg_per_day: EmptyBodyGainKgPerDay::new(estimate)?,
+        within_published_domain,
+    })
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 #[repr(transparent)]
@@ -610,6 +649,22 @@ mod tests {
             .is_err()
         );
         assert!(RelativeHumidityPercent::new(101.0).is_err());
+    }
+
+    #[test]
+    fn br_corte_empty_body_gain_matches_published_worked_example() {
+        // BR-CORTE 2023 chapter 17 applies chapter 1 Eq. 1.12 to ADG=1.4 kg/d.
+        let estimate =
+            estimate_empty_body_gain_brcorte_2023_v1(AverageDailyGainKgPerDay::new(1.4).unwrap())
+                .unwrap();
+        assert!(estimate.within_published_domain);
+        assert!((estimate.kg_per_day.get() - 1.355).abs() < 0.001);
+
+        let extrapolation =
+            estimate_empty_body_gain_brcorte_2023_v1(AverageDailyGainKgPerDay::new(2.0).unwrap())
+                .unwrap();
+        assert!(!extrapolation.within_published_domain);
+        assert!(AverageDailyGainKgPerDay::new(-0.2).is_err());
     }
 
     #[test]
