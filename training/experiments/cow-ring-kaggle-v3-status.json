@@ -13,29 +13,25 @@
     "kaggle_reported_last_run_time": "2026-10-22 23:04:56.397000 (timezone unspecified by CLI)"
   },
   "status_observed": {
-    "time_utc": "2026-10-22 23:08:46 UTC",
-    "kernel_status": "KernelWorkerStatus.RUNNING",
-    "outputs_available": false,
+    "initial_time_utc": "2026-10-22 23:08:46 UTC",
+    "initial_status": "KernelWorkerStatus.RUNNING",
+    "terminal_time_utc": "2026-10-22 23:15:13 UTC",
+    "terminal_status": "KernelWorkerStatus.ERROR",
+    "model_outputs_available": false,
+    "kernel_log_available": true,
+    "kernel_log_sha256": "3f27ee07743091a451c7ea6ed78c02221e9a66ab444029c0ad90e30a2638a018",
     "training_completion_confirmed": false,
-    "metrics_recorded": false
+    "metrics_recorded": false,
+    "terminal_error": "ValueError: No contiguous labeled windows found; check timestamps, 10 Hz sampling, and CSV schema"
   },
   "experiment_scope": "Rerun the existing training/train.py timestamp-contiguous 10 Hz window extraction and unchanged model configurations; no architecture or hyperparameter changes.",
-  "timestamp_diagnostics_expected": [
-    "invalid_timestamp_rows",
-    "missing_sensor_or_label_rows",
-    "reordered_rows",
-    "duplicate_timestamp_breaks",
-    "sampling_gap_breaks",
-    "contiguous_runs",
-    "candidate_windows",
-    "discarded_mixed_label_windows",
-    "accepted_windows"
-  ],
+  "root_cause": "The run treated every repeated whole-second time value as a duplicate sample and assumed 100 ms resolution. The source CSV repeats timestamps over batches of sensor rows, so no usable windows were produced.",
+  "training_execution": "Failed during preprocessing before fitting any model; no GPU optimizer steps, evaluation metrics, or model artifacts were produced.",
   "holdout_status": "Animal 1 validation and animal 6 holdout were previously inspected in version 2; version 3 results, if recovered, are exploratory and not independent or acceptance evidence.",
   "recovery": {
     "command": "kaggle kernels output pascalcoimbra/campo-vivo-cow-activity-baseline -p <private-output-directory>",
     "artifacts_expected_after_completion": ["evaluation.json", "activity_classifier.pt or activity_classifier.joblib"],
     "note": "Keep raw data, detailed outputs and model artifacts private; this status record contains no metrics or data rows."
   },
-  "historical_record": "Version 2 results remain in training/experiments/kaggle-cuda-run.json and training/README.md as historical results predating the timestamp-continuity fix."
+  "historical_record": "Version 2 results remain in training/experiments/kaggle-cuda-run.json and training/README.md as historical results predating timestamp-aware preprocessing. A separate local CSV audit now uses coarse whole-second timestamp blocks and has not yet been rerun on Kaggle."
 }

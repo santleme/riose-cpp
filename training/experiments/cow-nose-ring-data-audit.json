@@ -1,0 +1,108 @@
+{
+  "checked_utc": "2026-10-22",
+  "kaggle_dataset": "fandaoerji/cow-nose-ring-data-set",
+  "source_version": "The public file listing had one data.csv file; Kaggle CLI metadata did not expose a version number.",
+  "license": "CC0-1.0",
+  "file": {
+    "name": "data.csv",
+    "archive_bytes": 8207938,
+    "archive_sha256": "624a0fa73cbbbc860eebe3aee7a1aad5130a3a30987542a577383f25507454c8",
+    "csv_bytes": 45069036,
+    "csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "downloaded_with": "Kaggle CLI 2.2.4"
+  },
+  "raw_audit": {
+    "rows": 1252536,
+    "kaggle_card_rows": 1252522,
+    "row_count_difference": 14,
+    "columns": [
+      "date",
+      "time",
+      "cow_num",
+      "acc_x",
+      "acc_y",
+      "acc_z",
+      "behavior"
+    ],
+    "animal_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "animal_count": 7,
+    "date_count": 11,
+    "behavior_counts": {
+      "0": 359711,
+      "1": 294985,
+      "2": 1827,
+      "3": 3368,
+      "4": 592645
+    },
+    "invalid_timestamps": 0,
+    "missing_sensor_or_label_rows": 0,
+    "time_resolution": "whole seconds; timestamps commonly repeat for 20 rows, with the next timestamp +2 seconds",
+    "timestamp_decreases_in_source_order_within_animal_day": 1848
+  },
+  "timestamp_aware_extraction": {
+    "sampling_rate_hz": 10,
+    "assumption": "Sensor rows within each whole-second timestamp bucket retain sample order; the published 10 Hz rate and bucket row counts are used to detect incomplete/gapped blocks. Sub-second timing cannot be verified from this source file.",
+    "timestamp_blocks": 62980,
+    "rows_inside_multirow_timestamp_blocks": 1252238,
+    "ambiguous_blocks_excluded": 10184,
+    "sampling_gap_breaks": 10181,
+    "contiguous_runs": 5817,
+    "candidate_windows": 18570,
+    "discarded_mixed_label_windows": 124,
+    "accepted_windows": 18446,
+    "window_label_counts": {
+      "0": 5594,
+      "1": 4157,
+      "2": 18,
+      "3": 37,
+      "4": 8640
+    },
+    "window_counts_by_animal": {
+      "1": 485,
+      "2": 3673,
+      "3": 2122,
+      "4": 2930,
+      "5": 2271,
+      "6": 4215,
+      "7": 2750
+    },
+    "model_metrics": {
+      "run_manifest": "cow-ring-kaggle-v4-manifest.json",
+      "status": "COMPLETE on Tesla T4; descriptive exploratory result",
+      "validation_selected_model": "extra_trees",
+      "validation_macro_f1": {
+        "extra_trees": 0.6931093067820383,
+        "random_forest": 0.60178803115936,
+        "mlp": 0.6608756576710864,
+        "torch_mlp_cuda": 0.36208637853315234
+      },
+      "test_macro_f1": {
+        "extra_trees": 0.47605330975013943,
+        "random_forest": 0.4698924975915008,
+        "mlp": 0.4709038953087207,
+        "torch_mlp_cuda": 0.543485085041937
+      },
+      "test_weighted_f1": {
+        "extra_trees": 0.791288960657376,
+        "random_forest": 0.7773477682998385,
+        "mlp": 0.7801632557673236,
+        "torch_mlp_cuda": 0.771644358650554
+      },
+      "cuda_runtime": {
+        "cuda_available": true,
+        "gpu_name": "Tesla T4"
+      },
+      "source_hash_pinned_in_v4_output": false,
+      "exploratory_only": true
+    },
+    "note": "Preprocessing audit locally extracted 18,446 windows, and Kaggle v4 reproduced these aggregate parser diagnostics and completed training. V4 holdout/candidate comparisons are exploratory because animals 1/6 had previously been inspected; its evaluation did not include the pinned source hash. See the run manifest for aggregate metrics and output hashes. V5 with pinned data, required CUDA, and direct optimizer-step logging is pending review."
+  }
+}

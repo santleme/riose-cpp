@@ -1,0 +1,112 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "kernel_url": "https://www.kaggle.com/code/pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "version": 4,
+  "visibility": "private",
+  "status": "COMPLETE",
+  "status_observed_at_utc": "2026-10-22 23:20:41 UTC",
+  "kaggle_reported_last_run_time": "2026-10-22 23:16:57.300000 (timezone unspecified by CLI)",
+  "accelerator": {
+    "requested": "NvidiaTeslaT4",
+    "runtime_device": "cuda",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4"
+  },
+  "dataset": {
+    "slug": "fandaoerji/cow-nose-ring-data-set",
+    "file": "data.csv",
+    "license": "CC0-1.0",
+    "authoritative_local_audit_csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "v4_evaluation_embedded_source_sha256": null,
+    "v4_hash_verified": false,
+    "input_rows": 1252536,
+    "note": "The v4 source preceded the data-hash pin. Its parser diagnostics match the audited local CSV counts, but v4 itself did not verify or record the CSV SHA-256."
+  },
+  "source": {
+    "main_commit_at_submission": "379f744fa0a21d113fa85363060b4070d8e70cd4",
+    "script_sha256": "ef635786b4989b5560c2607ef1025a3d8dbe765dbeeb0a9cf23658f944fc4ea9",
+    "kernel_metadata_sha256": "5bc925f23ee28c78ede0a176316f587e0dd84618ea2217cb8a83300d9114674f",
+    "model_configuration": "Unchanged training/train.py configurations: Extra Trees, Random Forest, scikit-learn MLP, and CUDA PyTorch MLP; seed 23; 300 trees; fixed 45 epochs and batch size 1024 for the CUDA MLP."
+  },
+  "timestamp_parser_diagnostics": {
+    "invalid_timestamp_rows": 0,
+    "missing_sensor_or_label_rows": 0,
+    "reordered_rows": 194827,
+    "timestamp_blocks": 62980,
+    "rows_in_multirow_blocks": 1252238,
+    "ambiguous_blocks_excluded": 10184,
+    "sampling_gap_breaks": 10181,
+    "contiguous_runs": 5817,
+    "candidate_windows": 18570,
+    "discarded_mixed_label_windows": 124,
+    "accepted_windows": 18446,
+    "matches_local_parser_audit": true,
+    "sampling_assumption": "Within each whole-second timestamp bucket, CSV row order is treated as 10 Hz sensor order; sub-second timing cannot be verified."
+  },
+  "split_counts": {
+    "total_windows": 18446,
+    "fit_windows": 13746,
+    "validation_windows": 485,
+    "train_windows_including_validation": 14231,
+    "test_windows": 4215,
+    "test_class_support": {
+      "feeding": 1986,
+      "rumination": 898,
+      "standing": 8,
+      "lying": 12,
+      "walking": 1311
+    }
+  },
+  "validation_model_selection": {
+    "animal_group_used_for_selection": "1",
+    "selected_model": "extra_trees",
+    "macro_f1": {
+      "extra_trees": 0.6931093067820383,
+      "random_forest": 0.60178803115936,
+      "mlp": 0.6608756576710864,
+      "torch_mlp_cuda": 0.36208637853315234
+    }
+  },
+  "test_metrics_exploratory_only": {
+    "holdout_animal_group": "6",
+    "macro_f1": {
+      "extra_trees": 0.47605330975013943,
+      "random_forest": 0.4698924975915008,
+      "mlp": 0.4709038953087207,
+      "torch_mlp_cuda": 0.543485085041937
+    },
+    "weighted_f1": {
+      "extra_trees": 0.791288960657376,
+      "random_forest": 0.7773477682998385,
+      "mlp": 0.7801632557673236,
+      "torch_mlp_cuda": 0.771644358650554
+    },
+    "rare_class_f1": {
+      "extra_trees_standing_support_8": 0.0,
+      "extra_trees_lying_support_12": 0.0,
+      "torch_mlp_standing_support_8": 0.2857142857142857,
+      "torch_mlp_lying_support_12": 0.1320754716981132
+    },
+    "interpretation": "Animal 1/6 results and candidate families were previously inspected. These are descriptive rerun metrics, not independent validation or acceptance evidence. The CUDA MLP's higher test macro-F1 does not override its lower validation macro-F1; Extra Trees remains the validation-selected model."
+  },
+  "cuda_training_steps": {
+    "directly_recorded_by_v4": false,
+    "inferred_validation_fit_steps": 630,
+    "inferred_refit_steps": 630,
+    "inferred_total_steps": 1260,
+    "inference_basis": "The submitted v4 script runs 45 epochs over batches of 1024: ceil(13746/1024)=14 batches per epoch for validation fit, then ceil(14231/1024)=14 batches per epoch for refit. Each CUDA call therefore has 630 AdamW updates. This is inferred from source and row counts, not directly logged in v4."
+  },
+  "private_artifact_sha256": {
+    "evaluation_json": "f3738aad06992719695070f48efc72a0601f9d76b07f299667380e2b90f85aa6",
+    "selected_joblib": "0a3f5c66787edd09d1bf4869ff408c952f159e9fbc93b31af29fb90a38d48911",
+    "kernel_log": "da4ca52a4d2b775ab2a57bd56d32765331e8075ab9d473fa511080f64cff2d96"
+  },
+  "status_limitations": [
+    "Holdout animal 6 had already been inspected in earlier versions; all v4 metrics are exploratory and post-exposure.",
+    "Validation group animal 1 and the same model families were previously used; no independent acceptance claim is supported.",
+    "Very small standing/lying class support makes per-class scores unstable.",
+    "The exact input file hash was not embedded by v4; v5 is needed for pinned-data reproducibility and direct optimizer-step logging."
+  ],
+  "artifact_policy": "Raw dataset, full evaluation with detailed reports, kernel log, and joblib checkpoint remain private in Kaggle; this repository stores aggregate metrics and hashes only.",
+  "recovery_command": "kaggle kernels output pascalcoimbra/campo-vivo-cow-activity-baseline/4 -p <private-output-directory>"
+}
