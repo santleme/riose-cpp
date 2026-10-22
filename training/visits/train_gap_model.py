@@ -27,6 +27,8 @@ import numpy as np
 import torch
 from torch import nn
 
+from gap_metrics import evaluate
+
 DATASET = "juliavalente/data-from-visits-to-the-trough-of-nellore-cattle"
 DATASET_VERSION = 2
 LICENSE = "CC-BY-NC-SA-4.0"
@@ -395,27 +397,6 @@ def baseline_predictions(train_rows, target_hours, rows):
     return result, {"global_median_h": global_median, "hourly_medians_h": {str(k): v for k, v in sorted(hour_medians.items())}}
 
 
-def evaluate(y_hours: np.ndarray, prediction: np.ndarray, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    pred = np.clip(np.asarray(prediction, dtype=np.float64), 0.0, 24.0)
-    target = np.asarray(y_hours, dtype=np.float64)
-    per_animal = {}
-    for animal in sorted({row["animal"] for row in rows}):
-        mask = np.asarray([row["animal"] == animal for row in rows])
-        per_animal[str(animal)] = {
-            "n": int(mask.sum()),
-            "mae_hours": float(np.mean(np.abs(pred[mask] - target[mask]))),
-            "mae_log1p_hours": float(np.mean(np.abs(np.log1p(pred[mask]) - np.log1p(target[mask])))),
-        }
-    animal_maes = [value["mae_hours"] for value in per_animal.values()]
-    return {
-        "n": int(len(target)),
-        "mae_hours_pooled": float(np.mean(np.abs(pred - target))),
-        "mae_log1p_hours_pooled": float(np.mean(np.abs(np.log1p(pred) - np.log1p(target)))),
-        "macro_animal_mae_hours": float(np.mean(animal_maes)),
-        "per_animal": per_animal,
-    }
-
-
 def bootstrap_delta(model_metrics, baseline_metrics, seed: int, reps: int = 2000) -> dict[str, Any]:
     model = model_metrics["per_animal"]
     base = baseline_metrics["per_animal"]
@@ -450,7 +431,7 @@ def run_split(name: str, samples, partitions, seed: int, device: torch.device, o
     with torch.no_grad():
         normalized_val = torch.tensor((x_val - x_mean) / x_std, dtype=torch.float32, device=device)
         predicted_val_log = model(normalized_val).detach().cpu().numpy()
-        predicted_val_h = np.expm1(np.clip(predicted_val_log, 0.0, math.log1p(24.0)))
+        predicted_val_h = np.expm1(predicted_val_log)
     val_result["neural_mlp"] = evaluate(y_val, predicted_val_h, val_rows)
 
     test_baselines, _ = baseline_predictions(train_rows, y_train, test_rows)
@@ -458,7 +439,7 @@ def run_split(name: str, samples, partitions, seed: int, device: torch.device, o
     with torch.no_grad():
         normalized_test = torch.tensor((x_test - x_mean) / x_std, dtype=torch.float32, device=device)
         predicted_test_log = model(normalized_test).detach().cpu().numpy()
-        predicted_test_h = np.expm1(np.clip(predicted_test_log, 0.0, math.log1p(24.0)))
+        predicted_test_h = np.expm1(predicted_test_log)
     test_result["neural_mlp"] = evaluate(y_test, predicted_test_h, test_rows)
     test_result["neural_vs_validation_selected_baseline_bootstrap"] = bootstrap_delta(
         test_result["neural_mlp"], test_result[best_baseline_name], seed + 113
@@ -533,7 +514,8 @@ def main() -> None:
             "negative_overlaps": "excluded from regression and counted in audit; not clipped to zero",
             "zero_gaps": "retained",
             "right_censored_last_events": "excluded; one per animal with events",
-            "long_gaps": "retained without winsorization; separately counted above 8h, 12h and 24h",
+            "long_gaps": "targets retained without winsorization; separately counted above 8h, 12h and 24h",
+            "prediction_range": "all models and baselines are clipped to [0, 24] hours for scoring; report clipped prediction count and fraction per metric set; target values are never clipped",
         },
         "features": FEATURES,
         "feature_policy": "Only current completed event and prior event history; no animal_id/equip_id, no future rows, no intake or behavior labels.",

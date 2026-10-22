@@ -75,8 +75,8 @@
       "7": 2750
     },
     "model_metrics": {
-      "run_manifest": "cow-ring-kaggle-v4-manifest.json",
-      "status": "COMPLETE on Tesla T4; descriptive exploratory result",
+      "run_manifest": "cow-ring-kaggle-v5-manifest.json",
+      "status": "v5 COMPLETE on Tesla T4; data hash verified; descriptive exploratory result",
       "validation_selected_model": "extra_trees",
       "validation_macro_f1": {
         "extra_trees": 0.6931093067820383,
@@ -101,8 +101,15 @@
         "gpu_name": "Tesla T4"
       },
       "source_hash_pinned_in_v4_output": false,
+      "source_hash_pinned_in_v5_output": true,
+      "source_csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+      "v5_optimizer_steps": {
+        "direct_final_cuda_fit": 630,
+        "validation_cuda_fit_inferred": 630,
+        "total_direct_plus_inferred": 1260
+      },
       "exploratory_only": true
     },
-    "note": "Preprocessing audit locally extracted 18,446 windows, and Kaggle v4 reproduced these aggregate parser diagnostics and completed training. V4 holdout/candidate comparisons are exploratory because animals 1/6 had previously been inspected; its evaluation did not include the pinned source hash. See the run manifest for aggregate metrics and output hashes. V5 with pinned data, required CUDA, and direct optimizer-step logging is pending review."
+    "note": "Preprocessing audit locally extracted 18,446 windows, and Kaggle v4/v5 reproduced these aggregate parser diagnostics and completed training. V5 verified the pinned source hash, required CUDA, confirmed Tesla T4, and logged 630 optimizer updates for the final fit (the validation-fit count is inferred). Holdout/candidate comparisons are exploratory because animals and model families were previously inspected. See the v5 run manifest for aggregate metrics and output hashes."
   }
 }

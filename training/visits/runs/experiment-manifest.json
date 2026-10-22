@@ -1,4 +1,13 @@
 {
+  "method_revision_prediction_clipping": {
+    "date": "2026-10-22",
+    "targets": "Long positive target gaps remain uncapped; existing above-8h, above-12h, and above-24h counts refer to target observations.",
+    "predictions": "MLP, ExtraTrees, and baseline predictions are clipped to [0, 24] hours for scoring. The earlier JSON did not record how many predictions hit the limits.",
+    "revised_evaluator": "training/visits/train_gap_model.py evaluate() records lower/upper/clipped counts and fractions for every metric set and leaves targets unchanged. Estimator adapters now return raw nonnegative model predictions so clipping diagnostics are measured at the scoring boundary.",
+    "metrics": "The cap is preserved; moving the same cap to the shared evaluator is intended to leave previously reported MAE values unchanged. Existing metric outputs are historical and have no clipping counters; rerun the frozen pipeline if numeric metric values change or refreshed counters are required.",
+    "verification": "Unit test covers predictions above and below the scoring bounds and verifies uncapped targets remain unchanged.",
+    "review_status": "method_revision; no hyperparameter or candidate selection change"
+  },
   "dataset": {
     "kaggle_slug": "juliavalente/data-from-visits-to-the-trough-of-nellore-cattle",
     "version": 2,
