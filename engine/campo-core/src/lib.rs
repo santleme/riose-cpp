@@ -1,9 +1,11 @@
 //! Small deterministic scientific kernel for Campo Vivo.
 //!
 //! This module accounts for water and herbage using externally supplied daily
-//! fluxes. It does not predict plant growth, animal intake, physiology, or
-//! behavior. Keeping those quantities as explicit forcings prevents an
-//! accounting kernel from being mistaken for a calibrated biological model.
+//! fluxes and exposes a published BR-CORTE 2023 empirical estimate of daily
+//! drinking-water intake for tropical beef cattle. It does not predict plant
+//! growth, actual consumption, weight gain, or behavior. Keeping predictions
+//! explicitly scoped prevents a small kernel from being mistaken for a full
+//! calibrated biological model.
 
 #![forbid(unsafe_op_in_unsafe_fn)]
 
@@ -43,6 +45,126 @@ macro_rules! quantity {
 quantity!(ForageKgDmPerHa, "kg DM/ha");
 quantity!(WaterMm, "mm");
 quantity!(BodyWeightKg, "kg live weight");
+quantity!(DryMatterIntakeKgPerDay, "kg DM/day");
+
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[repr(transparent)]
+pub struct TemperatureCelsius(f64);
+
+impl TemperatureCelsius {
+    pub fn new(value: f64) -> Result<Self, InputError> {
+        if value.is_finite() {
+            Ok(Self(value))
+        } else {
+            Err(InputError::InvalidQuantity {
+                name: "TemperatureCelsius",
+                value,
+            })
+        }
+    }
+
+    pub const fn get(self) -> f64 {
+        self.0
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[repr(transparent)]
+pub struct RelativeHumidityPercent(f64);
+
+impl RelativeHumidityPercent {
+    pub fn new(value: f64) -> Result<Self, InputError> {
+        if value.is_finite() && (0.0..=100.0).contains(&value) {
+            Ok(Self(value))
+        } else {
+            Err(InputError::InvalidRelativeHumidity(value))
+        }
+    }
+
+    pub const fn get(self) -> f64 {
+        self.0
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[repr(transparent)]
+pub struct WaterLitersPerDay(f64);
+
+impl WaterLitersPerDay {
+    pub const fn get(self) -> f64 {
+        self.0
+    }
+}
+
+/// BR-CORTE 2023 reports these input ranges in its independent validation
+/// summary for the Zanetti et al. tropical beef-cattle water-intake equation.
+pub const WATER_MODEL_VALIDATION_DOMAIN: [(f64, f64); 4] = [
+    (46.1, 119.4), // metabolic body weight, kg^0.75
+    (16.2, 36.6),  // daily maximum temperature, degrees Celsius
+    (42.5, 95.3),  // relative humidity, percent
+    (0.3, 15.7),   // dry matter intake, kg/day
+];
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct WaterIntakeEstimateV1 {
+    pub liters_per_day: WaterLitersPerDay,
+    /// False means at least one input is outside the published validation
+    /// ranges. The estimate is returned without clipping, so callers can
+    /// surface uncertainty instead of silently extrapolating as validated.
+    pub within_validation_domain: bool,
+}
+
+/// Daily water-intake equation reported in BR-CORTE (2023), chapter 14,
+/// equation proposed by Zanetti et al. (2019):
+/// WI = 9.449 + 0.190 * BW^0.75 + 0.271 * Tmax - 0.259 * RH + 0.489 * DMI.
+///
+/// This is an empirical intake estimate, not a minimum water requirement,
+/// dehydration model, or prediction of drinking-event timing. It was evaluated
+/// on tropical beef-cattle datasets (including Nellore); the chapter reports
+/// 14,774 daily observations in independent validation, with concordance
+/// coefficient 0.574, so accuracy of the mean does not imply precise
+/// individual-day predictions. Values are expressed as L/day assuming water
+/// density of approximately 1 kg/L as in the source tables.
+pub fn estimate_water_intake_brcorte_2023_v1(
+    body_weight: BodyWeightKg,
+    dry_matter_intake: DryMatterIntakeKgPerDay,
+    daily_max_temperature: TemperatureCelsius,
+    relative_humidity: RelativeHumidityPercent,
+) -> Result<WaterIntakeEstimateV1, InputError> {
+    if body_weight.get() <= 0.0 {
+        return Err(InputError::InvalidBodyWeight(body_weight.get()));
+    }
+    let metabolic_body_weight = body_weight.get().powf(0.75);
+    let estimate = 9.449 + 0.190 * metabolic_body_weight + 0.271 * daily_max_temperature.get()
+        - 0.259 * relative_humidity.get()
+        + 0.489 * dry_matter_intake.get();
+    if !estimate.is_finite() {
+        return Err(InputError::ArithmeticOverflow {
+            name: "BR-CORTE water-intake estimate",
+        });
+    }
+    if estimate < 0.0 {
+        return Err(InputError::InvalidQuantity {
+            name: "BR-CORTE water-intake estimate",
+            value: estimate,
+        });
+    }
+
+    let within_validation_domain = [
+        metabolic_body_weight,
+        daily_max_temperature.get(),
+        relative_humidity.get(),
+        dry_matter_intake.get(),
+    ]
+    .into_iter()
+    .zip(WATER_MODEL_VALIDATION_DOMAIN)
+    .all(|(value, (minimum, maximum))| (minimum..=maximum).contains(&value));
+
+    Ok(WaterIntakeEstimateV1 {
+        liters_per_day: WaterLitersPerDay(estimate),
+        within_validation_domain,
+    })
+}
 
 pub const OBSERVATION_SCHEMA_V1: u16 = 1;
 pub const ACTION_SCHEMA_V1: u16 = 1;
@@ -262,6 +384,8 @@ pub enum InputError {
     InvalidQuantity { name: &'static str, value: f64 },
     ArithmeticOverflow { name: &'static str },
     WaterExceedsCapacity { water_mm: f64, capacity_mm: f64 },
+    InvalidBodyWeight(f64),
+    InvalidRelativeHumidity(f64),
 }
 
 impl fmt::Display for InputError {
@@ -278,6 +402,15 @@ impl fmt::Display for InputError {
                 write!(
                     f,
                     "soil water ({water_mm} mm) exceeds capacity ({capacity_mm} mm)"
+                )
+            }
+            Self::InvalidBodyWeight(value) => {
+                write!(f, "body weight must be positive, got {value} kg")
+            }
+            Self::InvalidRelativeHumidity(value) => {
+                write!(
+                    f,
+                    "relative humidity must be between 0 and 100%, got {value}"
                 )
             }
         }
@@ -393,6 +526,43 @@ pub unsafe extern "C" fn campo_step_patch_v1(
     0
 }
 
+/// C ABI for the BR-CORTE 2023 tropical beef-cattle water-intake estimate.
+/// Returns 0 on success and -1 for invalid inputs. `out_within_validation`
+/// receives 1 when all predictors are within the chapter's validation ranges,
+/// otherwise 0. The numeric prediction is still returned when out of range,
+/// explicitly marked as extrapolation.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn campo_estimate_water_intake_brcorte_2023_v1(
+    body_weight_kg: f64,
+    dmi_kg_dm_day: f64,
+    tmax_celsius: f64,
+    relative_humidity_percent: f64,
+    out_liters_per_day: *mut f64,
+    out_within_validation: *mut u32,
+) -> i32 {
+    let parsed = (|| {
+        estimate_water_intake_brcorte_2023_v1(
+            BodyWeightKg::new(body_weight_kg).ok()?,
+            DryMatterIntakeKgPerDay::new(dmi_kg_dm_day).ok()?,
+            TemperatureCelsius::new(tmax_celsius).ok()?,
+            RelativeHumidityPercent::new(relative_humidity_percent).ok()?,
+        )
+        .ok()
+    })();
+    let Some(result) = parsed else { return -1 };
+
+    // SAFETY: each non-null pointer is documented as writable by the C caller.
+    unsafe {
+        if !out_liters_per_day.is_null() {
+            *out_liters_per_day = result.liters_per_day.get();
+        }
+        if !out_within_validation.is_null() {
+            *out_within_validation = u32::from(result.within_validation_domain);
+        }
+    }
+    0
+}
+
 #[unsafe(no_mangle)]
 pub extern "C" fn campo_core_abi_version() -> u32 {
     1
@@ -407,6 +577,39 @@ mod tests {
     }
     fn q_forage(v: f64) -> ForageKgDmPerHa {
         ForageKgDmPerHa::new(v).unwrap()
+    }
+
+    #[test]
+    fn br_corte_water_intake_matches_published_equation_in_validation_domain() {
+        let estimate = estimate_water_intake_brcorte_2023_v1(
+            BodyWeightKg::new(350.0).unwrap(),
+            DryMatterIntakeKgPerDay::new(7.0).unwrap(),
+            TemperatureCelsius::new(30.0).unwrap(),
+            RelativeHumidityPercent::new(60.0).unwrap(),
+        )
+        .unwrap();
+        assert!(estimate.within_validation_domain);
+        assert!((estimate.liters_per_day.get() - 20.837).abs() < 0.001);
+
+        let extrapolated = estimate_water_intake_brcorte_2023_v1(
+            BodyWeightKg::new(350.0).unwrap(),
+            DryMatterIntakeKgPerDay::new(7.0).unwrap(),
+            TemperatureCelsius::new(38.0).unwrap(),
+            RelativeHumidityPercent::new(60.0).unwrap(),
+        )
+        .unwrap();
+        assert!(!extrapolated.within_validation_domain);
+        assert!(BodyWeightKg::new(0.0).is_ok());
+        assert!(
+            estimate_water_intake_brcorte_2023_v1(
+                BodyWeightKg::new(0.0).unwrap(),
+                DryMatterIntakeKgPerDay::new(7.0).unwrap(),
+                TemperatureCelsius::new(30.0).unwrap(),
+                RelativeHumidityPercent::new(60.0).unwrap(),
+            )
+            .is_err()
+        );
+        assert!(RelativeHumidityPercent::new(101.0).is_err());
     }
 
     #[test]

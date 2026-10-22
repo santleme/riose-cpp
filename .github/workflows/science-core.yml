@@ -8,6 +8,8 @@ on:
       - 'scripts/build-wasm.mjs'
       - 'package.json'
       - 'package-lock.json'
+      - 'training/data/**'
+      - 'training/growth/**'
       - '.github/workflows/science-core.yml'
   pull_request:
     paths:
@@ -16,6 +18,8 @@ on:
       - 'scripts/build-wasm.mjs'
       - 'package.json'
       - 'package-lock.json'
+      - 'training/data/**'
+      - 'training/growth/**'
       - '.github/workflows/science-core.yml'
 
 jobs:
@@ -33,6 +37,11 @@ jobs:
           cache: npm
       - run: cargo fmt --check --manifest-path engine/campo-core/Cargo.toml
       - run: cargo test --manifest-path engine/campo-core/Cargo.toml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - run: npm ci
       - run: npm run build
       - run: npm run test:wasm
+      - run: python -m unittest training.data.test_ingest_nellore_trough -v
+      - run: python -m json.tool training/data/datasets.json > /dev/null

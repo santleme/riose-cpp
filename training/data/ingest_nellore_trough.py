@@ -31,6 +31,8 @@ DOWNLOAD_URL = (
 )
 EXPECTED_HEADER = ["animal_id", "equip_id", "IN", "OUT"]
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+EXPECTED_ARCHIVE_SHA256 = "fd2cfd016503dcff40be2931a6bd04a7185d020c811f6cafa08ec3925d9b5884"
+EXPECTED_ARCHIVE_BYTES = 890166
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -331,6 +333,13 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(f"archive not found: {path}; pass --download or --input PATH")
 
     archive, member, rows = read_archive(path)
+    archive_hash = sha256_bytes(archive)
+    if len(archive) != EXPECTED_ARCHIVE_BYTES or archive_hash != EXPECTED_ARCHIVE_SHA256:
+        raise ValueError(
+            "Archive does not match the pinned Kaggle v2 release "
+            f"(expected {EXPECTED_ARCHIVE_BYTES} bytes / {EXPECTED_ARCHIVE_SHA256}, "
+            f"got {len(archive)} bytes / {archive_hash}); review source version before updating the pin"
+        )
     events = parse_events(rows)
     if len(events) != 90211:
         raise ValueError(f"Expected 90,211 rows for Kaggle v2; found {len(events)}")

@@ -17,6 +17,18 @@ export interface PatchLedgerResult {
   unmetHerbageRemovalKgDmPerHa: number;
 }
 
+export interface WaterIntakeInput {
+  bodyWeightKg: number;
+  dmiKgDmPerDay: number;
+  dailyMaxTemperatureC: number;
+  relativeHumidityPercent: number;
+}
+
+export interface WaterIntakeEstimate {
+  litersPerDay: number;
+  withinValidationDomain: boolean;
+}
+
 interface CampoCoreExports extends WebAssembly.Exports {
   memory: WebAssembly.Memory;
   campo_core_abi_version: () => number;
@@ -35,12 +47,21 @@ interface CampoCoreExports extends WebAssembly.Exports {
     outActualEt: number,
     outUnmetRemoval: number,
   ) => number;
+  campo_estimate_water_intake_brcorte_2023_v1: (
+    bodyWeightKg: number,
+    dmiKgDmPerDay: number,
+    tmaxCelsius: number,
+    relativeHumidityPercent: number,
+    outLitersPerDay: number,
+    outWithinValidation: number,
+  ) => number;
   __heap_base: WebAssembly.Global;
 }
 
 export interface ScienceCore {
   readonly abiVersion: number;
   stepPatch(input: PatchLedgerInput): PatchLedgerResult;
+  estimateWaterIntake(input: WaterIntakeInput): WaterIntakeEstimate;
 }
 
 export async function loadScienceCore(baseUrl = import.meta.env.BASE_URL): Promise<ScienceCore> {
@@ -55,7 +76,7 @@ export async function loadScienceCore(baseUrl = import.meta.env.BASE_URL): Promi
   // This first core has no heap allocator or dynamic allocations. Reserve a small
   // aligned result block immediately above __heap_base for synchronous FFI calls.
   const scratch = Math.ceil(Number(exports.__heap_base.value) / 8) * 8;
-  const resultBytes = Float64Array.BYTES_PER_ELEMENT * 5;
+  const resultBytes = 56;
   if (scratch + resultBytes > exports.memory.buffer.byteLength) {
     const missingPages = Math.ceil((scratch + resultBytes - exports.memory.buffer.byteLength) / 65_536);
     exports.memory.grow(missingPages);
@@ -95,6 +116,33 @@ export async function loadScienceCore(baseUrl = import.meta.env.BASE_URL): Promi
         runoffMm: view.getFloat64(scratch + 16, true),
         actualEtMm: view.getFloat64(scratch + 24, true),
         unmetHerbageRemovalKgDmPerHa: view.getFloat64(scratch + 32, true),
+      };
+    },
+    estimateWaterIntake(input) {
+      const { bodyWeightKg, dmiKgDmPerDay, dailyMaxTemperatureC, relativeHumidityPercent } = input;
+      if (
+        !Number.isFinite(bodyWeightKg) || bodyWeightKg <= 0 ||
+        !Number.isFinite(dmiKgDmPerDay) || dmiKgDmPerDay < 0 ||
+        !Number.isFinite(dailyMaxTemperatureC) ||
+        !Number.isFinite(relativeHumidityPercent) || relativeHumidityPercent < 0 || relativeHumidityPercent > 100
+      ) {
+        throw new RangeError('BR-CORTE water inputs are outside their physical input domains');
+      }
+
+      const litersPointer = scratch + 40;
+      const validationPointer = scratch + 48;
+      const status = exports.campo_estimate_water_intake_brcorte_2023_v1(
+        bodyWeightKg,
+        dmiKgDmPerDay,
+        dailyMaxTemperatureC,
+        relativeHumidityPercent,
+        litersPointer,
+        validationPointer,
+      );
+      if (status !== 0) throw new RangeError('BR-CORTE water-intake model rejected the inputs');
+      return {
+        litersPerDay: view.getFloat64(litersPointer, true),
+        withinValidationDomain: view.getUint32(validationPointer, true) === 1,
       };
     },
   };

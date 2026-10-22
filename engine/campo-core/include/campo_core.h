@@ -25,6 +25,17 @@ int32_t campo_step_patch_v1(
     double *out_actual_et_mm,
     double *out_unmet_removal_kg_dm_ha);
 
+/* BR-CORTE 2023, chapter 14 tropical beef-cattle water-intake estimate.
+   Outputs L/day (assuming ~1 kg/L) and 1 if all predictors are in the
+   published independent-validation ranges, else 0 (extrapolation). */
+int32_t campo_estimate_water_intake_brcorte_2023_v1(
+    double body_weight_kg,
+    double dmi_kg_dm_day,
+    double tmax_celsius,
+    double relative_humidity_percent,
+    double *out_liters_per_day,
+    uint32_t *out_within_validation);
+
 #ifdef __cplusplus
 }
 #endif
