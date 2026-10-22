@@ -73,7 +73,7 @@ export async function loadScienceCore(baseUrl = import.meta.env.BASE_URL): Promi
   const abiVersion = exports.campo_core_abi_version();
   if (abiVersion !== 1) throw new Error(`Unsupported Campo Vivo core ABI: ${abiVersion}`);
 
-  // This first core has no heap allocator or dynamic allocations. Reserve a small
+  // This core has no heap allocator or dynamic allocations. Reserve a small
   // aligned result block immediately above __heap_base for synchronous FFI calls.
   const scratch = Math.ceil(Number(exports.__heap_base.value) / 8) * 8;
   const resultBytes = 56;

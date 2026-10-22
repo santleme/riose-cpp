@@ -10,6 +10,7 @@ on:
       - 'package-lock.json'
       - 'training/data/**'
       - 'training/growth/**'
+      - 'training/visits/**'
       - '.github/workflows/science-core.yml'
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - 'package-lock.json'
       - 'training/data/**'
       - 'training/growth/**'
+      - 'training/visits/**'
       - '.github/workflows/science-core.yml'
 
 jobs:
@@ -47,3 +49,5 @@ jobs:
       - run: python -m unittest training.data.test_audit_nellore_shade -v
       - run: python -m json.tool training/data/datasets.json > /dev/null
       - run: python -m json.tool training/data/reports/nellore-shade-access-2026-10.json > /dev/null
+      - run: python -m py_compile training/growth/train_growth.py training/visits/train_gap_model.py training/visits/train_gap_extratrees.py
+      - run: python -m json.tool training/visits/runs/experiment-manifest.json > /dev/null

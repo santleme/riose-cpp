@@ -20,6 +20,8 @@ A equação BR-CORTE é uma estimativa empírica de **ingestão diária de água
 
 Fontes primárias: [BR-CORTE 2023, capítulo 14 (PDF)](https://brcorte.com.br/assets/book2023/en/14.pdf); [BR-CORTE 2023, capítulo 2 (DMI)](https://brcorte.com.br/assets/book2023/en/02.pdf). A implementação preserva a fórmula, a unidade e a indicação de domínio de validade; os coeficientes não foram ajustados ao conjunto de sombra Mendeley nem a dados sintéticos.
 
+O smoke test também reproduz o exemplo trabalhado no capítulo 14: BW=520 kg, DMI=10,62 kg MS/d, Tmax=29 °C e RH=79% resultam em 22,73 L/d (22,729971 L/d antes do arredondamento). Isso confere a transcrição da equação, não valida o uso fora da população/modelo publicado.
+
 Os cálculos são determinísticos para entradas iguais no mesmo alvo. IEEE-754 não promete resultados bit a bit idênticos entre arquiteturas/compiladores distintos. Não há RNG nem parâmetros ajustados com dados.
 
 ## Build local

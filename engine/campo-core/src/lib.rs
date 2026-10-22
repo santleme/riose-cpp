@@ -582,20 +582,20 @@ mod tests {
     #[test]
     fn br_corte_water_intake_matches_published_equation_in_validation_domain() {
         let estimate = estimate_water_intake_brcorte_2023_v1(
-            BodyWeightKg::new(350.0).unwrap(),
-            DryMatterIntakeKgPerDay::new(7.0).unwrap(),
-            TemperatureCelsius::new(30.0).unwrap(),
-            RelativeHumidityPercent::new(60.0).unwrap(),
+            BodyWeightKg::new(520.0).unwrap(),
+            DryMatterIntakeKgPerDay::new(10.62).unwrap(),
+            TemperatureCelsius::new(29.0).unwrap(),
+            RelativeHumidityPercent::new(79.0).unwrap(),
         )
         .unwrap();
         assert!(estimate.within_validation_domain);
-        assert!((estimate.liters_per_day.get() - 20.837).abs() < 0.001);
+        assert!((estimate.liters_per_day.get() - 22.73).abs() < 0.001);
 
         let extrapolated = estimate_water_intake_brcorte_2023_v1(
-            BodyWeightKg::new(350.0).unwrap(),
-            DryMatterIntakeKgPerDay::new(7.0).unwrap(),
+            BodyWeightKg::new(520.0).unwrap(),
+            DryMatterIntakeKgPerDay::new(10.62).unwrap(),
             TemperatureCelsius::new(38.0).unwrap(),
-            RelativeHumidityPercent::new(60.0).unwrap(),
+            RelativeHumidityPercent::new(79.0).unwrap(),
         )
         .unwrap();
         assert!(!extrapolated.within_validation_domain);
@@ -603,9 +603,9 @@ mod tests {
         assert!(
             estimate_water_intake_brcorte_2023_v1(
                 BodyWeightKg::new(0.0).unwrap(),
-                DryMatterIntakeKgPerDay::new(7.0).unwrap(),
-                TemperatureCelsius::new(30.0).unwrap(),
-                RelativeHumidityPercent::new(60.0).unwrap(),
+                DryMatterIntakeKgPerDay::new(10.62).unwrap(),
+                TemperatureCelsius::new(29.0).unwrap(),
+                RelativeHumidityPercent::new(79.0).unwrap(),
             )
             .is_err()
         );
