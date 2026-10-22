@@ -1,13 +1,22 @@
 import datetime as dt
 import unittest
 
-from ingest_nellore_trough import (
-    make_animal_splits,
-    make_time_splits,
-    parse_events,
-    time_partition_for_event,
-    validate_splits,
-)
+try:
+    from .ingest_nellore_trough import (
+        make_animal_splits,
+        make_time_splits,
+        parse_events,
+        time_partition_for_event,
+        validate_splits,
+    )
+except ImportError:  # Also allow running this file directly from training/data.
+    from ingest_nellore_trough import (
+        make_animal_splits,
+        make_time_splits,
+        parse_events,
+        time_partition_for_event,
+        validate_splits,
+    )
 
 
 class NelloreTroughPipelineTests(unittest.TestCase):
