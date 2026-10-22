@@ -1,0 +1,117 @@
+{
+  "audit_time_utc": "2026-10-22T22:54:01+00:00",
+  "dataset": {
+    "doi": "10.17632/cctgpznjrc.1",
+    "version": "1",
+    "landing_url": "https://data.mendeley.com/datasets/cctgpznjrc/1",
+    "license_on_landing_page": "CC BY 4.0 (observed on public page)",
+    "primary_article_doi": "10.1371/journal.pone.0331238"
+  },
+  "access_check": {
+    "landing_page": {
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes_received": 135540,
+      "redirect_followed": false
+    },
+    "landing_page_title": "Data on: Shade provision and its influence on water consumption and drinking behaviour of Nellore cattle in feedlot in a tropical environment",
+    "public_file_list_endpoint": {
+      "url": "https://api.data.mendeley.com/datasets/publics/cctgpznjrc/files?version=1",
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "redirect_followed": false
+    },
+    "public_zip_endpoint": {
+      "url": "https://api.data.mendeley.com/datasets/cctgpznjrc/zip/file_downloaded?version=1",
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "redirect_followed": false
+    },
+    "file_access_verified": false,
+    "raw_file_downloaded": false,
+    "file_names_schema_hash_and_units": null,
+    "interpretation": "HTTP 401 on both public API routes without credentials. This establishes no anonymous file-level access; it does not by itself prove a 451 embargo response."
+  },
+  "datacite": {
+    "status": 200,
+    "rights_list": [
+      {
+        "rightsUri": "info:eu-repo/semantics/embargoedAccess"
+      },
+      {
+        "rights": "Creative Commons Attribution 4.0 International",
+        "rightsUri": "https://creativecommons.org/licenses/by/4.0/legalcode",
+        "schemeUri": "https://spdx.org/licenses/",
+        "rightsIdentifier": "cc-by-4.0",
+        "rightsIdentifierScheme": "SPDX"
+      }
+    ],
+    "dates": [
+      {
+        "date": "2025-08-14T23:59:59Z",
+        "dateType": "Available"
+      },
+      {
+        "date": "2025",
+        "dateType": "Issued"
+      }
+    ],
+    "note": "Metadata simultaneously lists an embargoedAccess rights URI and CC BY 4.0; reconcile with actual file access and depositor terms."
+  },
+  "reported_study_facts_from_primary_article": {
+    "animals_at_completion": 47,
+    "initial_animals": 48,
+    "treatment_assignment_level": "four collective pens: two shaded and two unshaded; animal groups allocated to pens",
+    "duration_days": 83,
+    "individual_water_intake_mean_l_day": {
+      "shade": 35.1,
+      "no_shade": 37.9
+    },
+    "mean_liveweights_kg_reported_at_weighings": [
+      477,
+      551,
+      591
+    ],
+    "dmi_kg_dm_day": 11.6,
+    "mean_daily_max_temperature_c": 29.1,
+    "mean_relative_humidity_percent": 70.8,
+    "published_water_events": 19388,
+    "published_dmi_records": 3854,
+    "published_liveweight_records": 282,
+    "weather_frequency_discrepancy": "Mendeley page describes 7,968 weather records at 15-minute intervals; article methods text says hourly observations. Verify against workbook before deriving daily TMAX/RH."
+  },
+  "br_corte_2023": {
+    "equation": "WI_L_day = 9.449 + 0.190 * BW_kg^0.75 + 0.271 * TMAX_C - 0.259 * RH_percent + 0.489 * DMI_kg_DM_day",
+    "source_url": "https://brcorte.com.br/assets/book2023/br/14.pdf",
+    "published_independent_validation": "BR-CORTE chapter reports 14,774 daily measurements in five separate Nellore experiments; prediction mean 16.3 vs observed 16.1 L/day, slope 1.005, intercept -0.3109, CCC 0.574, and predicted range 2.3–32.3 versus observed 2.0–49.9 L/day.",
+    "domain_note": "For context, 551 kg corresponds to BW^0.75≈113.7 kg^0.75, slightly above the chapter's largest training-experiment group maximum (113.5) and within the largest validation-experiment group maximum (114.2); the 591 kg final mean corresponds to ≈119.8, above the reported validation group maxima. These are study-level summary ranges, not a full row-level domain test.",
+    "illustrative_group_mean_plugin": {
+      "inputs": {
+        "body_weight_kg": 551,
+        "body_weight_note": "middle of three reported weigh-ins; not a time-weighted 83-day mean",
+        "TMAX_C": 29.1,
+        "RH_percent": 70.8,
+        "DMI_kg_DM_day": 11.6
+      },
+      "predicted_l_day": 26.278435775433756,
+      "published_observed_group_means_l_day": {
+        "shade": 35.1,
+        "no_shade": 37.9
+      },
+      "difference_predicted_minus_published_mean_l_day": {
+        "shade": -8.821564224566245,
+        "no_shade": -11.621564224566242
+      },
+      "status": "illustrative calculation only; not a validation metric. Equation is linear but BW^0.75 and covariate means do not yield an exact mean prediction, BW value is not an interval average, and daily inputs/animal rows/pen identifiers were unavailable."
+    },
+    "row_level_metrics": null,
+    "reason_metrics_missing": "The Mendeley file list and ZIP endpoints returned HTTP 401 without authentication; no raw animal-by-day or pen-keyed observations were available. No bias/MAE/calibration or train/test split was computed."
+  },
+  "causal_and_validation_limits": [
+    "Shade is assigned at pen/group level (2 pens per treatment) while the article analyzes 47 animal records as experimental units; animal-level independence can understate treatment uncertainty.",
+    "A valid group split must keep entire pen(s) together. With only two pens per treatment, robust treatment generalization is not estimable from random animal splits.",
+    "Only treatment means are in the article text, so the plug-in cannot compare shade-specific residuals or calibrate individual predictions.",
+    "The source page's meteorological interval and article methods are inconsistent; do not infer daily maxima from the advertised time series until raw schema is inspected.",
+    "Data source is feedlot TMR and four collective pens, not extensive pasture."
+  ]
+}
