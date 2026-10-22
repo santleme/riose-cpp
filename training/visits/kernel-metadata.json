@@ -1,0 +1,13 @@
+{
+  "id": "pascalcoimbra/campo-vivo-nellore-next-visit-gap-benchmark",
+  "title": "Campo Vivo Nellore Next Visit Gap Benchmark",
+  "code_file": "train_gap_model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "dataset_sources": ["juliavalente/data-from-visits-to-the-trough-of-nellore-cattle"],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
