@@ -1,7 +1,7 @@
 {
-  "id": "pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "id": "pascalcoimbra/campo-vivo-cow-activity-loso-v6-exploratory",
   "title": "Campo Vivo Cow Activity LOSO v6 Exploratory",
-  "code_file": "train_loso.py",
+  "code_file": "train_loso_bundle.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": "true",

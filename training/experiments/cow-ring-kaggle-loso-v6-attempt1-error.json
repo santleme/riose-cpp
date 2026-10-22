@@ -1,0 +1,15 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-cow-activity-loso-v6-exploratory",
+  "version_reported_by_cli": 6,
+  "status": "ERROR",
+  "visibility": "private",
+  "status_note": "Kaggle executed only the entry script; sibling train.py was not available in /kaggle/src, so import failed before data loading or model fitting.",
+  "submitted_entrypoint_sha256": "09e11403e66b3f174ce5dd14585a69bafac271dcb7036625c79618acae22aa13",
+  "base_v5_script_sha256": "16b021f87e1f5e08be73fa0a49cffabd25be3b3e1efe0d732a6c1e1fb8cd41e0",
+  "submitted_metadata_sha256": "cfa8151abada9491606958cf74d2a4b308f018fb8f235fe9fcf27dc1b01e0e3a",
+  "private_log_sha256": "b3ceb7aa83090851989be229aefb0640810aa0a5e5f020be47cc2044ac4f78a8",
+  "data_loaded": false,
+  "metrics": null,
+  "checkpoint": null,
+  "note": "Attempt preserved as a run failure, not a training result. A single-file bundle is used for the next version; protocol and v5 configurations remain unchanged."
+}
