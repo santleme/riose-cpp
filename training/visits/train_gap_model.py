@@ -465,8 +465,6 @@ def run_split(name: str, samples, partitions, seed: int, device: torch.device, o
     )
     val_compare = val_result["neural_mlp"]["macro_animal_mae_hours"] < val_result[best_baseline_name]["macro_animal_mae_hours"]
     test_compare = test_result["neural_mlp"]["macro_animal_mae_hours"] < test_result[best_baseline_name]["macro_animal_mae_hours"]
-    ci = test_result["neural_vs_validation_selected_baseline_bootstrap"]["ci95_delta_macro_animal_mae_h"]
-    robust_test_win = ci is not None and ci[1] < 0 and test_result["neural_mlp"]["mae_hours_pooled"] < test_result[best_baseline_name]["mae_hours_pooled"]
     return {
         "split_name": name,
         "train_rows": len(train_rows), "validation_rows": len(val_rows), "test_rows": len(test_rows),
@@ -477,7 +475,7 @@ def run_split(name: str, samples, partitions, seed: int, device: torch.device, o
         "test_metrics": test_result,
         "validation_neural_beats_selected_baseline": val_compare,
         "test_neural_beats_selected_baseline": test_compare,
-        "test_robust_acceptance_gate": robust_test_win,
+        "holdout_metrics_are_descriptive_only": True,
     }
 
 
@@ -521,7 +519,6 @@ def main() -> None:
     animal_partition_ids = {name: sorted(animal for animal, split in animal_split.items() if split == name) for name in ("train", "validation", "test")}
     time_partition_dates = {name: sorted(date.isoformat() for date, split in time_split.items() if split == name) for name in ("train", "validation", "test")}
     # The model is a research-only event-time predictor. It is never emitted as an animal policy.
-    accepted = bool(animal_result["test_robust_acceptance_gate"] and time_result["test_robust_acceptance_gate"])
     artifact_hashes = {}
     for result in (animal_result, time_result):
         path = args.output_dir / result["fit"]["checkpoint"]
@@ -553,10 +550,11 @@ def main() -> None:
             "neural_checkpoint_selection": "lowest validation MAE in log1p hours; test never used for epochs, hyperparameters, or model selection",
             "uncertainty": "paired bootstrap over animals (2000 resamples) for macro-animal MAE delta; negative delta favours MLP",
             "policy_exported": False,
-            "policy_acceptance_gate": "candidate needs pooled test MAE improvement and 95% animal-bootstrap upper bound below zero on both held-out-animal and future-time tests; this remains predictive, not causal or a policy",
+            "interpretation": "Holdout metrics are descriptive. Architecture comparison is exploratory/post-selection; no candidate acceptance or policy claim is available from these data.",
+            "independent_evaluation_required": "Pre-register candidate families and protocol, then evaluate on a new farm or cohort.",
         },
         "results": {"animal_holdout": animal_result, "future_time_holdout": time_result},
-        "candidate_status": "passes_predictive_gate_only_not_a_policy" if accepted else "no_evidence_of_robust_generalization_over_baselines",
+        "evaluation_status": "exploratory_post_selection_no_acceptance_claim",
         "runtime": runtime,
         "checkpoints": artifact_hashes,
         "scientific_limits": [
@@ -570,7 +568,7 @@ def main() -> None:
     evaluation_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps({
         "phase": "complete", "runtime": runtime,
-        "candidate_status": manifest["candidate_status"],
+        "evaluation_status": manifest["evaluation_status"],
         "animal_test_mlp": animal_result["test_metrics"]["neural_mlp"],
         "time_test_mlp": time_result["test_metrics"]["neural_mlp"],
         "evaluation": str(evaluation_path),
