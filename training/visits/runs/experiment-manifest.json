@@ -165,10 +165,10 @@
       "evaluation": "fe9d69686afddff5d5d8f8ca1bb8fc3c3752d772dcceb50efe636c228b3c2088",
       "animal_checkpoint": "50aa7184586862666c81629d412b33fe7b4ab617dfdfb7e46179c0e1baf2fc4c",
       "future_checkpoint": "d406a009e531c11cdb102a8d322bbc44b3834e1c1144889219a3b6c3435ee122"
-    }
+    },
+    "artifact_note": "These are hashes of private artifacts from the historical reproduction run; detailed files and weights are not committed. Repository scripts now report exploratory holdout metrics without acceptance statuses."
   },
   "extratrees_cpu_iteration": {
-    "source_script_sha256": "85faf199f42ea13891612ff3d0653beb0f9c0a828959dcab4f026e7dd2e60383",
     "runtime": {
       "device": "CPU",
       "scikit_learn": "1.6.1",
@@ -182,8 +182,8 @@
       "max_depth": null,
       "criterion": "squared_error"
     },
-    "animal_holdout_validity": "held-out animal IDs were disjoint from all model selection",
-    "temporal_holdout_validity": "exploratory only: same dates were inspected and model selection validation included all dates; not independent or blinded",
+    "animal_holdout_validity": "exploratory/post-selection for suite-level comparison: animal IDs are disjoint across fit/validation/test, but ExtraTrees was added after the MLP animal-test result was inspected; descriptive only, not an independent acceptance estimate",
+    "temporal_holdout_validity": "exploratory/post-selection: outcomes inspected and tree model-selection validation included all dates; not independent or blinded",
     "results": {
       "animal_holdout": {
         "train_rows": 52562,
@@ -248,14 +248,28 @@
       "evaluation": "e9983f564d78aed8345bacd7009b3f83b47a247b1dccd9bdc4f07e7f3eecb1a5",
       "animal_checkpoint": "51b66387078adadc46721572bf7e55a7bb83f967809292e1d44851194d4329b9",
       "future_checkpoint": "25c6bf31b8e66571550a67b8526a6a92de16a5987b4c28797f18b6eafc5fca98"
-    }
+    },
+    "historical_run_source_script_sha256": "85faf199f42ea13891612ff3d0653beb0f9c0a828959dcab4f026e7dd2e60383"
   },
   "limits": [
     "Only 21 days in one feeding-efficiency cohort; no external farm/cohort validation.",
     "Next-visit interval is not a behavioral, intake, water, physiology, or causal label.",
-    "The animal holdout result for ExtraTrees loses to the hourly-median baseline; do not integrate it as an animal policy.",
-    "Temporal metrics are exploratory after their holdout was inspected. A new cohort is required for independent temporal/external validation.",
+    "After the initial MLP animal-holdout result was inspected, ExtraTrees was added; therefore both holdout views are exploratory for the final candidate suite, even though ExtraTrees hyperparameters used validation.",
+    "The temporal outcomes were inspected, and ExtraTrees selection validation included all dates. The temporal results are not an independent time holdout.",
+    "No acceptance or generalization claim is made from this adaptive benchmark. A new farm/cohort with the entire candidate suite frozen in advance is required.",
     "Data-derived checkpoints/joblib and detailed outputs are not included in this repository due to CC BY-NC-SA-4.0 and unresolved redistribution/commercial-use implications. Outputs remain recoverable from the private Kaggle kernel."
   ],
-  "raw_or_model_artifacts_in_repo": false
+  "raw_or_model_artifacts_in_repo": false,
+  "candidate_suite_evaluation_status": "exploratory_post_selection_no_acceptance_claim",
+  "selection_history": {
+    "initial_candidate": "The MLP was first evaluated on the animal split; its holdout result was then inspected before adding ExtraTrees as another model family.",
+    "effect": "Both animal and temporal holdout comparisons for the final MLP+ExtraTrees suite are post-selection and exploratory. ExtraTrees parameters were chosen on validation, but selecting the model family after observing the MLP animal result makes the suite-level animal comparison adaptive.",
+    "temporal_additional_limit": "The tree tuning validation included all dates and the temporal holdout outcomes were inspected; those dates are also exploratory and not a blinded temporal estimate.",
+    "acceptance_claim": false,
+    "next_independent_evaluation": "Pre-register the full model-family set, features and selection protocol, then evaluate once on a new farm or cohort."
+  },
+  "current_repository_script_hashes": {
+    "training/visits/train_gap_model.py": "a0d2b96ac1d97bf86e312acfd64bd9e84aa55fed28c297a45445b449c6d27842",
+    "training/visits/train_gap_extratrees.py": "70390560698d2dc836b69c851ce56895cf3e92f921866d104375a43488bd6f6e"
+  }
 }

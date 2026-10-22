@@ -130,11 +130,6 @@ def main():
                   for key in ("train", "validation", "test")}
     time_dates = {key: sorted(date.isoformat() for date, split in time_split.items() if split == key)
                   for key in ("train", "validation", "test")}
-    accepted = all(
-        out["test_metrics"]["extra_trees"]["mae_hours_pooled"] < out["test_metrics"][selected_baseline]["mae_hours_pooled"]
-        and out["paired_animal_bootstrap_95_ci_delta"][1] < 0
-        for out in outputs.values()
-    )
     manifest = {
         "experiment": "nellore_next_visit_gap_extratrees_v1",
         "dataset": source,
@@ -152,19 +147,20 @@ def main():
             "comparison_baseline": selected_baseline,
             "baselines_reported": ["training_global_median", "training_hourly_median", "persistence_previous_gap"],
             "uncertainty": "paired bootstrap by animal, 2000 resamples; negative delta favours ExtraTrees",
-            "candidate_acceptance": "pooled MAE and 95% animal-bootstrap upper bound must both beat the frozen hourly-median baseline on both test views; even a pass is predictive only and not an animal policy",
+            "interpretation": "Holdout metrics are descriptive and exploratory/post-selection; no candidate acceptance claim is available from these data.",
+            "independent_evaluation_required": "Pre-register candidate families and protocol, then evaluate on a new farm or cohort.",
             "policy_exported": False,
             "seed": args.seed,
         },
         "results": outputs,
-        "candidate_status": "predictive_candidate_only_not_a_policy" if accepted else "negative_benchmark_no_policy_or_runtime_integration",
+        "evaluation_status": "exploratory_post_selection_no_acceptance_claim",
         "runtime": {"device": "CPU", "scikit_learn": __import__("sklearn").__version__, "numpy": np.__version__},
         "license_note": "Dataset source is CC-BY-NC-SA-4.0. No dataset content is bundled. Checkpoint redistribution/commercial use requires attribution and license review.",
         "manifest_hashes": {},
     }
     path = args.output_dir / "evaluation.json"
     path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
-    print(json.dumps({"candidate_status": manifest["candidate_status"], "selected_params": frozen_params,
+    print(json.dumps({"evaluation_status": manifest["evaluation_status"], "selected_params": frozen_params,
                       "results": {name: {"tree": item["test_metrics"]["extra_trees"],
                                           "hourly": item["test_metrics"][selected_baseline],
                                           "persistence": item["test_metrics"]["persistence_previous_gap"],
