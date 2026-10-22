@@ -299,7 +299,7 @@ def main():
         "environment": {"api": "Gymnasium reset/step", "version": ENVIRONMENT_VERSION,
             "gymnasium_installed": GYMNASIUM_BACKEND,
             "observation_fields": OBSERVATION_FIELDS, "actions": ACTION_NAMES, "horizon_steps": HORIZON,
-            "reward": "potential(after)-potential(before) - resource depletion cost - unavailable-action penalty - high-need penalties; see train_policy.py"},
+            "reward": "0.35 * (potential(after)-potential(before)) + 0.65 * potential(after) - resource depletion cost - unavailable-action penalty - high-need penalties; see train_policy.py"},
         "training": {**training, "device": str(device), "cuda_available": torch.cuda.is_available(),
                      "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
                      "eval_seeds_disjoint": True, "evaluation_seeds": eval_seeds},

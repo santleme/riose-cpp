@@ -24,7 +24,7 @@
       "follow_herd"
     ],
     "horizon_steps": 240,
-    "reward": "potential(after)-potential(before) - resource depletion cost - unavailable-action penalty - high-need penalties; see train_policy.py"
+    "reward": "0.35 * (potential(after)-potential(before)) + 0.65 * potential(after) - resource depletion cost - unavailable-action penalty - high-need penalties; see train_policy.py"
   },
   "training": {
     "seed": 41,

@@ -1,4 +1,5 @@
 import { chooseBehavior, type AnimalAction, type AnimalTraits } from './behavior-policy';
+import { chooseLearnedGameAction, type CowPolicyObservation } from './learned-policy';
 
 export type Weather = 'sunny' | 'cloudy' | 'rain' | 'heat';
 export type AnimalState = 'grazing' | 'drinking' | 'resting' | 'walking';
@@ -54,7 +55,13 @@ export class FarmSimulation {
       a.stress=clamp(a.stress+(heatLoad*.11+(this.grass<25?.13:0)-.035)*hours);
       a.fatigue=clamp(a.fatigue+((a.state==='walking'?.6:-.15))*hours);
       const patch=this.nearestPatch(a.x,a.y),shade=this.nearestShade(a.x,a.y);
-      const action=chooseBehavior({hunger:a.hunger,thirst:a.thirst,heatLoad,fatigue:a.fatigue,forage:patch.grass,waterAvailable:this.water>1,shadeAvailable:true,distanceToWater:distance(a.x,a.y,.84,.76),distanceToShade:distance(a.x,a.y,shade.x,shade.y),distanceToHerd:distance(a.x,a.y,herdX,herdY),favoriteForage:a.favoritePatch===this.patches.indexOf(patch)?.28:0,currentAction:a.action,actionHours:a.actionHours,daylight:this.daylight(),traits:a.traits}).action;
+      const behaviorObservation={hunger:a.hunger,thirst:a.thirst,heatLoad,fatigue:a.fatigue,forage:patch.grass,waterAvailable:this.water>1,shadeAvailable:true,distanceToWater:distance(a.x,a.y,.84,.76),distanceToShade:distance(a.x,a.y,shade.x,shade.y),distanceToHerd:distance(a.x,a.y,herdX,herdY),favoriteForage:a.favoritePatch===this.patches.indexOf(patch)?.28:0,currentAction:a.action,actionHours:a.actionHours,daylight:this.daylight(),traits:a.traits};
+      const learnedObservation:CowPolicyObservation=[a.hunger/100,a.thirst/100,a.fatigue/100,Math.min(1,heatLoad/10),patch.grass/100,this.water/100,Math.max(.08,1-distance(a.x,a.y,shade.x,shade.y)/.6),Math.max(0,1-distance(a.x,a.y,herdX,herdY)/.55),a.stress/100];
+      // The learned game policy is a candidate trained only on authored synthetic dynamics.
+      // Keep the explicit utility rule available as a transparent baseline.
+      const baselineAction=chooseBehavior(behaviorObservation).action;
+      let action:AnimalAction;
+      try{action=chooseLearnedGameAction(learnedObservation);}catch{action=baselineAction;}
       if(action!==a.action){a.action=action;a.actionHours=0;}
       a.actionHours+=hours;
       let tx=a.x,ty=a.y;
