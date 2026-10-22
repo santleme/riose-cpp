@@ -30,6 +30,11 @@ LABELS = {0: "feeding", 1: "rumination", 2: "standing", 3: "lying", 4: "walking"
 AXES = ["acc_x", "acc_y", "acc_z"]
 REQUIRED = {"date", "time", "cow_num", *AXES, "behavior"}
 WINDOW_SAMPLES = 50  # 5 s at the dataset's 10 Hz sample rate
+SAMPLING_HZ = 10
+SAMPLE_INTERVAL_SECONDS = 1.0 / SAMPLING_HZ
+# Allow modest timestamp quantization/jitter while ensuring a missing 10 Hz
+# sample (0.2 s between retained rows) always breaks a window.
+SAMPLE_INTERVAL_TOLERANCE_SECONDS = 0.025
 FEATURE_NAMES = [
     *(f"{axis}_{stat}" for axis in AXES for stat in ("mean", "std", "min", "max")),
     "mag_mean", "mag_std", "mag_min", "mag_max", "mag_rms", "signal_magnitude_area",
@@ -77,39 +82,109 @@ def _window_features(acc: np.ndarray) -> np.ndarray:
     return np.asarray(features, dtype=np.float32)
 
 
-def extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
-                    minimum_label_fraction: float = 0.8) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Return features, majority labels, and animal IDs, never crossing animal/day boundaries."""
+def _parse_sample_timestamps(frame: pd.DataFrame) -> pd.Series:
+    """Parse the dataset's date plus either seconds-of-day or clock time."""
+    dates = pd.to_datetime(frame["date"], errors="coerce").dt.normalize()
+    raw_time = frame["time"]
+    numeric_seconds = pd.to_numeric(raw_time, errors="coerce")
+    numeric_mask = numeric_seconds.notna()
+    # Numeric timestamps in the source/synthetic fixtures are seconds since
+    # midnight; textual clock values use HH:MM:SS[.fraction].
+    timedeltas = pd.Series(pd.NaT, index=frame.index, dtype="timedelta64[ns]")
+    if numeric_mask.any():
+        timedeltas.loc[numeric_mask] = pd.to_timedelta(numeric_seconds.loc[numeric_mask], unit="s")
+    textual_mask = ~numeric_mask & raw_time.notna()
+    if textual_mask.any():
+        timedeltas.loc[textual_mask] = pd.to_timedelta(raw_time.loc[textual_mask].astype(str), errors="coerce")
+    return dates + timedeltas
+
+
+def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
+                     minimum_label_fraction: float = 0.8
+                     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict]:
+    """Extract windows only from contiguous, timestamp-verified 10 Hz runs."""
     missing = REQUIRED - set(frame.columns)
     if missing:
         raise ValueError(f"Missing required columns: {', '.join(sorted(missing))}")
     frame = frame.copy()
     frame["cow_num"] = frame["cow_num"].astype(str)
+    frame["_source_order"] = np.arange(len(frame), dtype=np.int64)
+    frame["_timestamp"] = _parse_sample_timestamps(frame)
+    frame["_day"] = frame["_timestamp"].dt.normalize()
     for column in (*AXES, "behavior"):
         frame[column] = pd.to_numeric(frame[column], errors="coerce")
-    frame = frame.dropna(subset=[*AXES, "behavior"])
+    timestamp_valid = frame["_timestamp"].notna()
+    data_valid = frame[[*AXES, "behavior"]].notna().all(axis=1)
+    diagnostics = {
+        "input_rows": int(len(frame)),
+        "invalid_timestamp_rows": int((~timestamp_valid).sum()),
+        "missing_sensor_or_label_rows": int((timestamp_valid & ~data_valid).sum()),
+        "reordered_rows": 0,
+        "duplicate_timestamp_breaks": 0,
+        "sampling_gap_breaks": 0,
+        "contiguous_runs": 0,
+        "candidate_windows": 0,
+        "discarded_mixed_label_windows": 0,
+        "accepted_windows": 0,
+        "sampling_hz": SAMPLING_HZ,
+        "sample_interval_tolerance_seconds": SAMPLE_INTERVAL_TOLERANCE_SECONDS,
+    }
+    frame = frame.loc[timestamp_valid & data_valid].copy()
     frame["behavior"] = frame["behavior"].astype(int)
     features: list[np.ndarray] = []
     labels: list[int] = []
     animals: list[str] = []
-    # Input rows are in sample order; partition by cow and day to prevent mixing.
-    for (animal, _day), group in frame.groupby(["cow_num", "date"], sort=True):
-        acc = group[AXES].to_numpy(dtype=np.float32)
-        y = group["behavior"].to_numpy(dtype=np.int64)
-        full_windows = len(y) // window_samples
-        for index in range(full_windows):
-            start = index * window_samples
-            segment_labels = y[start:start + window_samples]
-            counts = Counter(segment_labels.tolist())
-            label, count = counts.most_common(1)[0]
-            if count / window_samples < minimum_label_fraction:
+    # Sort within each cow/day because CSV row order is not a sampling guarantee.
+    # A source-order diagnostic preserves visibility into shuffled input.
+    for (animal, _day), group in frame.groupby(["cow_num", "_day"], sort=True):
+        original_order = group["_source_order"].to_numpy()
+        ordered = group.sort_values(["_timestamp", "_source_order"], kind="stable").reset_index(drop=True)
+        diagnostics["reordered_rows"] += int(np.count_nonzero(original_order != ordered["_source_order"].to_numpy()))
+        timestamps = ordered["_timestamp"].astype("int64").to_numpy()
+        # Split on duplicates and on intervals outside the timestamp precision
+        # tolerance around the documented 100 ms sample interval. This also
+        # prevents a dropped NaN sensor row from being bridged after dropna.
+        deltas = np.diff(timestamps) / 1_000_000_000
+        boundaries = [0]
+        for index, delta in enumerate(deltas, start=1):
+            if delta <= 0:
+                diagnostics["duplicate_timestamp_breaks"] += 1
+                boundaries.append(index)
+            elif abs(delta - SAMPLE_INTERVAL_SECONDS) > SAMPLE_INTERVAL_TOLERANCE_SECONDS:
+                diagnostics["sampling_gap_breaks"] += 1
+                boundaries.append(index)
+        boundaries.append(len(ordered))
+        for run_start, run_end in zip(boundaries, boundaries[1:]):
+            if run_start == run_end:
                 continue
-            features.append(_window_features(acc[start:start + window_samples]))
-            labels.append(int(label))
-            animals.append(animal)
+            diagnostics["contiguous_runs"] += 1
+            run = ordered.iloc[run_start:run_end]
+            acc = run[AXES].to_numpy(dtype=np.float32)
+            y = run["behavior"].to_numpy(dtype=np.int64)
+            full_windows = len(y) // window_samples
+            for index in range(full_windows):
+                start = index * window_samples
+                segment_labels = y[start:start + window_samples]
+                diagnostics["candidate_windows"] += 1
+                counts = Counter(segment_labels.tolist())
+                label, count = counts.most_common(1)[0]
+                if count / window_samples < minimum_label_fraction:
+                    diagnostics["discarded_mixed_label_windows"] += 1
+                    continue
+                features.append(_window_features(acc[start:start + window_samples]))
+                labels.append(int(label))
+                animals.append(animal)
+    diagnostics["accepted_windows"] = len(features)
     if not features:
-        raise ValueError("No labeled windows found; check sample rate and CSV schema")
-    return np.stack(features), np.asarray(labels), np.asarray(animals)
+        raise ValueError("No contiguous labeled windows found; check timestamps, 10 Hz sampling, and CSV schema")
+    return np.stack(features), np.asarray(labels), np.asarray(animals), diagnostics
+
+
+def extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
+                    minimum_label_fraction: float = 0.8) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return features, majority labels, and animal IDs from contiguous 10 Hz windows."""
+    x, y, animals, _ = _extract_windows(frame, window_samples, minimum_label_fraction)
+    return x, y, animals
 
 
 def synthetic_frame(seed: int = 23, samples_per_animal: int = 4000) -> pd.DataFrame:
@@ -156,7 +231,7 @@ def main() -> None:
         source = f"{DATASET} (data.csv)"
         license_id = DATASET_LICENSE
 
-    x, y, animals = extract_windows(frame)
+    x, y, animals, extraction_diagnostics = _extract_windows(frame)
     test_mask = animals == str(args.holdout_animal)
     train_mask = ~test_mask
     validation_mask = animals == str(args.validation_animal)
@@ -225,8 +300,9 @@ def main() -> None:
     else:
         joblib.dump(fitted[best_name], args.output_dir / "activity_classifier.joblib", compress=3)
     metadata = {
-        "source": source, "license": license_id, "sampling_hz": 10, "window_seconds": 5,
+        "source": source, "license": license_id, "sampling_hz": SAMPLING_HZ, "window_seconds": 5,
         "window_samples": WINDOW_SAMPLES, "minimum_majority_fraction": 0.8,
+        "window_extraction": extraction_diagnostics,
         "feature_names": FEATURE_NAMES, "label_map": LABELS, "seed": args.seed,
         "holdout_animal": str(args.holdout_animal),
         "train_animals": sorted(set(animals[train_mask].tolist())),
@@ -242,7 +318,7 @@ def main() -> None:
         "models": results, "selected_model": best_name,
         "model_selection_animal": str(args.validation_animal),
         "model_artifact": "activity_classifier.pt" if best_name == "torch_mlp_cuda" else "activity_classifier.joblib",
-        "evaluation_note": "Single-animal group holdout pilot; use leave-one-animal-out cross-validation before biological/generalization claims.",
+        "evaluation_note": "Single-animal group holdout pilot; windows require timestamp-contiguous 10 Hz samples. Historical Kaggle metrics predate this continuity fix and require a rerun. Use leave-one-animal-out cross-validation before biological/generalization claims.",
         "runtime": {"cuda_available": bool(_cuda_available()), "device": "cuda" if _cuda_available() else "cpu",
                     "gpu_name": _gpu_name()},
     }
