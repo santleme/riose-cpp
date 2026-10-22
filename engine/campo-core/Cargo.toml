@@ -1,0 +1,13 @@
+[package]
+name = "campo-core"
+version = "0.1.0"
+edition = "2024"
+description = "Deterministic, unit-explicit scientific state transitions for Campo Vivo"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
