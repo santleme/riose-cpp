@@ -10,5 +10,6 @@ training/outputs/*
 training/policy/outputs/*
 training/kaggle-output/
 artifacts/
+.cache/
 /public/engine/campo_core.wasm
 /data/

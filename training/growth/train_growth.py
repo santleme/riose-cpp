@@ -233,7 +233,20 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     if args.data:
         data_path = args.data
-        source = {"source": "local or Kaggle-mounted input", "sha256": _sha256(data_path)}
+        data_hash = _sha256(data_path)
+        if data_hash != EXPECTED_SHA256:
+            raise RuntimeError(
+                "Explicit CSV input does not match pinned Mendeley v7 Complete_Dataset.csv; "
+                "refusing to train on a file with unverified provenance"
+            )
+        source = {
+            "source": "local or Kaggle-mounted input",
+            "dataset": "UFMS Nelore supplementation dataset",
+            "doi": DATASET_DOI,
+            "version": DATASET_VERSION,
+            "license": "CC BY 4.0",
+            "sha256": data_hash,
+        }
     elif args.source == "kaggle":
         data_path = _kaggle_csv(None, args.kaggle_dataset)
         kaggle_hash = _sha256(data_path)
