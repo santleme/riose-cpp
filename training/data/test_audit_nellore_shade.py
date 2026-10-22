@@ -1,6 +1,9 @@
 import unittest
 
-from audit_nellore_shade import br_corte_water_intake_l_day
+try:
+    from .audit_nellore_shade import br_corte_water_intake_l_day
+except ImportError:  # Also allow running this file directly from training/data.
+    from audit_nellore_shade import br_corte_water_intake_l_day
 
 
 class BrCorteWaterEquationTests(unittest.TestCase):

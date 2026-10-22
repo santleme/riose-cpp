@@ -45,7 +45,7 @@ For context only, plugging the shade paper's middle weigh-in (551 kg), mean DMI 
 
 To calculate a valid comparison when files become legitimately available, require a key for animal, date, pen and treatment; verify units; join daily water intake to contemporaneous DMI, BW and weather; and compute `BW^0.75`. Report predictions against observed daily L/day with bias, MAE, RMSE, calibration intercept/slope and CCC. Split by whole pen for treatment/generalization (only four pens total); separately, use chronological periods within pen for temporal checks. Do not random-split animal-day rows. Report both pooled and treatment-stratified metrics with pen-level uncertainty. The BR-CORTE paper's own validation found predicted maximum below observed maximum, so inspect upper-tail underprediction as well.
 
-The equation is an empirical expectation for daily demand. It does not predict thirst state, drinking-event timing, choice to seek shade, or the causal individual response to shade. The shade dataset, if opened, can validate aggregate daily intake and visit patterns in this feedlot/TMR context, not extensive pasture behavior without additional evidence.
+The equation is an empirical estimate of daily water intake in the cattle systems used for its development/validation. It does not predict thirst state, drinking-event timing, choice to seek shade, or the causal individual response to shade. The shade dataset, if opened, can validate aggregate daily intake and visit patterns in this feedlot/TMR context, not extensive pasture behavior without additional evidence.
 
 ## Reproduction
 

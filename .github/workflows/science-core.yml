@@ -44,4 +44,6 @@ jobs:
       - run: npm run build
       - run: npm run test:wasm
       - run: python -m unittest training.data.test_ingest_nellore_trough -v
+      - run: python -m unittest training.data.test_audit_nellore_shade -v
       - run: python -m json.tool training/data/datasets.json > /dev/null
+      - run: python -m json.tool training/data/reports/nellore-shade-access-2026-10.json > /dev/null
