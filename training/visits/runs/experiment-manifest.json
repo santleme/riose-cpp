@@ -278,7 +278,9 @@
     "next_independent_evaluation": "Pre-register the full model-family set, features and selection protocol, then evaluate once on a new farm or cohort."
   },
   "current_repository_script_hashes": {
-    "training/visits/train_gap_model.py": "a0d2b96ac1d97bf86e312acfd64bd9e84aa55fed28c297a45445b449c6d27842",
-    "training/visits/train_gap_extratrees.py": "70390560698d2dc836b69c851ce56895cf3e92f921866d104375a43488bd6f6e"
+    "training/visits/train_gap_model.py": "7bdbd013af51bd5377e0d7be6ca5b8145adcc2a8d8e3680e73d15e4a01f23de6",
+    "training/visits/train_gap_extratrees.py": "66121177adfa8ae0ed13e54d56b30513ffe556e0f6a746662a23fa07e670e7a7",
+    "training/visits/gap_metrics.py": "f3d4a1f2a9974f0c9befbc4d66738a473a90927db0e07fdb9eb9a38c127c89ec",
+    "training/visits/test_gap_metrics.py": "ccc37f3ebdcd9701511fb8570b3951fd2d8f7871ac0326e8c945df9a2c14dd39"
   }
 }

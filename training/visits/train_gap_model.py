@@ -27,7 +27,10 @@ import numpy as np
 import torch
 from torch import nn
 
-from gap_metrics import evaluate
+try:  # Support both direct script execution (Kaggle) and package imports.
+    from .gap_metrics import evaluate
+except ImportError:  # pragma: no cover - exercised by the Kaggle script entrypoint
+    from gap_metrics import evaluate
 
 DATASET = "juliavalente/data-from-visits-to-the-trough-of-nellore-cattle"
 DATASET_VERSION = 2

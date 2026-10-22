@@ -16,11 +16,18 @@ from pathlib import Path
 import numpy as np
 from sklearn.ensemble import ExtraTreesRegressor
 
-from gap_metrics import evaluate
-from train_gap_model import (
-    SEED, baseline_predictions, build_samples, make_splits, matrices,
-    read_source, resolve_data, sha256, split_rows,
-)
+try:  # Support package imports for audits and direct script execution on Kaggle.
+    from .gap_metrics import evaluate
+    from .train_gap_model import (
+        SEED, baseline_predictions, build_samples, make_splits, matrices,
+        read_source, resolve_data, sha256, split_rows,
+    )
+except ImportError:  # pragma: no cover - exercised by the Kaggle script entrypoint
+    from gap_metrics import evaluate
+    from train_gap_model import (
+        SEED, baseline_predictions, build_samples, make_splits, matrices,
+        read_source, resolve_data, sha256, split_rows,
+    )
 
 GRID = [
     {"n_estimators": 80, "max_features": feature_fraction, "min_samples_leaf": leaf,

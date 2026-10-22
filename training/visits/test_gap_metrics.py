@@ -2,7 +2,10 @@ import unittest
 
 import numpy as np
 
-from gap_metrics import evaluate
+try:
+    from .gap_metrics import evaluate
+except ImportError:  # pragma: no cover - direct test-file execution
+    from gap_metrics import evaluate
 
 
 class PredictionClippingMetricsTest(unittest.TestCase):
