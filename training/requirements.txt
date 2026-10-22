@@ -1,0 +1,5 @@
+numpy>=1.26,<3
+pandas>=2.0,<4
+scikit-learn==1.6.1
+joblib>=1.3,<2
+# PyTorch is optional for CPU runs; Kaggle's GPU image provides it.

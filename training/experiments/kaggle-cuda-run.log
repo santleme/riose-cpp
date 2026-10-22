@@ -1,0 +1,56 @@
+[{"stream_name":"stdout","time":133.130721657,"data":"{\n"}
+,{"stream_name":"stdout","time":133.130783004,"data":"  \"source\": \"fandaoerji/cow-nose-ring-data-set (data.csv)\",\n"}
+,{"stream_name":"stdout","time":133.130792533,"data":"  \"license\": \"CC0-1.0\",\n"}
+,{"stream_name":"stdout","time":133.130796645,"data":"  \"selected_model\": \"mlp\",\n"}
+,{"stream_name":"stdout","time":133.130799215,"data":"  \"test_animals\": [\n"}
+,{"stream_name":"stdout","time":133.130801539,"data":"    \"6\"\n"}
+,{"stream_name":"stdout","time":133.130803867,"data":"  ],\n"}
+,{"stream_name":"stdout","time":133.130806072,"data":"  \"windows\": {\n"}
+,{"stream_name":"stdout","time":133.130808348,"data":"    \"total\": 24782,\n"}
+,{"stream_name":"stdout","time":133.13081072,"data":"    \"fit\": 17556,\n"}
+,{"stream_name":"stdout","time":133.130812981,"data":"    \"validation\": 705,\n"}
+,{"stream_name":"stdout","time":133.130815277,"data":"    \"train\": 18261,\n"}
+,{"stream_name":"stdout","time":133.130817506,"data":"    \"test\": 6521,\n"}
+,{"stream_name":"stdout","time":133.130819846,"data":"    \"fit_class_counts\": {\n"}
+,{"stream_name":"stdout","time":133.130822142,"data":"      \"walking\": 9026,\n"}
+,{"stream_name":"stdout","time":133.130824416,"data":"      \"feeding\": 4265,\n"}
+,{"stream_name":"stdout","time":133.130827114,"data":"      \"lying\": 33,\n"}
+,{"stream_name":"stdout","time":133.130843451,"data":"      \"rumination\": 4215,\n"}
+,{"stream_name":"stdout","time":133.130847536,"data":"      \"standing\": 17\n"}
+,{"stream_name":"stdout","time":133.130851555,"data":"    },\n"}
+,{"stream_name":"stdout","time":133.130855166,"data":"    \"validation_class_counts\": {\n"}
+,{"stream_name":"stdout","time":133.130859414,"data":"      \"feeding\": 208,\n"}
+,{"stream_name":"stdout","time":133.130863352,"data":"      \"walking\": 431,\n"}
+,{"stream_name":"stdout","time":133.130866665,"data":"      \"lying\": 3,\n"}
+,{"stream_name":"stdout","time":133.130870083,"data":"      \"rumination\": 63\n"}
+,{"stream_name":"stdout","time":133.130873525,"data":"    },\n"}
+,{"stream_name":"stdout","time":133.130876755,"data":"    \"train_class_counts\": {\n"}
+,{"stream_name":"stdout","time":133.130880114,"data":"      \"feeding\": 4473,\n"}
+,{"stream_name":"stdout","time":133.130883416,"data":"      \"walking\": 9457,\n"}
+,{"stream_name":"stdout","time":133.130886876,"data":"      \"lying\": 36,\n"}
+,{"stream_name":"stdout","time":133.130893581,"data":"      \"rumination\": 4278,\n"}
+,{"stream_name":"stdout","time":133.130896121,"data":"      \"standing\": 17\n"}
+,{"stream_name":"stdout","time":133.130898374,"data":"    },\n"}
+,{"stream_name":"stdout","time":133.130900505,"data":"    \"test_class_counts\": {\n"}
+,{"stream_name":"stdout","time":133.130902782,"data":"      \"walking\": 2269,\n"}
+,{"stream_name":"stdout","time":133.130905069,"data":"      \"feeding\": 2641,\n"}
+,{"stream_name":"stdout","time":133.130907341,"data":"      \"lying\": 14,\n"}
+,{"stream_name":"stdout","time":133.130909544,"data":"      \"rumination\": 1589,\n"}
+,{"stream_name":"stdout","time":133.130911797,"data":"      \"standing\": 8\n"}
+,{"stream_name":"stdout","time":133.130914117,"data":"    }\n"}
+,{"stream_name":"stdout","time":133.130916271,"data":"  },\n"}
+,{"stream_name":"stdout","time":133.130918427,"data":"  \"macro_f1\": {\n"}
+,{"stream_name":"stdout","time":133.130920758,"data":"    \"extra_trees\": 0.48846,\n"}
+,{"stream_name":"stdout","time":133.130923042,"data":"    \"random_forest\": 0.48464,\n"}
+,{"stream_name":"stdout","time":133.130925317,"data":"    \"mlp\": 0.49144,\n"}
+,{"stream_name":"stdout","time":133.130944825,"data":"    \"torch_mlp_cuda\": 0.50995\n"}
+,{"stream_name":"stdout","time":133.130949636,"data":"  },\n"}
+,{"stream_name":"stdout","time":133.130953614,"data":"  \"output_dir\": \"/kaggle/working/training/outputs\"\n"}
+,{"stream_name":"stdout","time":133.13095765,"data":"}\n"}
+,{"stream_name":"stderr","time":138.20681272,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":138.206839913,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":138.443124298,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":138.443156729,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":139.198171516,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":140.200503094,"data":"[NbConvertApp] Writing 359419 bytes to __results__.html\n"}
+]

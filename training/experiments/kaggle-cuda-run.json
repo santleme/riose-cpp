@@ -1,0 +1,38 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "url": "https://www.kaggle.com/code/pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "kernel_version": 2,
+  "status": "complete",
+  "requested_accelerator": "NvidiaTeslaT4",
+  "observed_cuda_available": true,
+  "observed_device": "cuda",
+  "dataset": "fandaoerji/cow-nose-ring-data-set (data.csv)",
+  "license": "CC0-1.0",
+  "selected_model": "mlp",
+  "selection_animal": "1",
+  "test_animal": [
+    "6"
+  ],
+  "models": {
+    "extra_trees": {
+      "validation_macro_f1": 0.5350477049624716,
+      "test_macro_f1": 0.4884573459018918,
+      "test_weighted_f1": 0.8087456120340576
+    },
+    "random_forest": {
+      "validation_macro_f1": 0.4651767786737434,
+      "test_macro_f1": 0.48464417405885263,
+      "test_weighted_f1": 0.8012635645256744
+    },
+    "mlp": {
+      "validation_macro_f1": 0.5428645959252663,
+      "test_macro_f1": 0.49143989831962787,
+      "test_weighted_f1": 0.8138189842500049
+    },
+    "torch_mlp_cuda": {
+      "validation_macro_f1": 0.4199045191210796,
+      "test_macro_f1": 0.5099475145583817,
+      "test_weighted_f1": 0.7948439839108815
+    }
+  }
+}

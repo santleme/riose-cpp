@@ -1,0 +1,13 @@
+{
+  "id": "pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "title": "Campo Vivo Cow Activity Baseline",
+  "code_file": "train.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "dataset_sources": ["fandaoerji/cow-nose-ring-data-set"],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
