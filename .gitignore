@@ -9,6 +9,8 @@ training/**/__pycache__/
 training/outputs/*
 training/policy/outputs/*
 training/kaggle-output/
+training/visits/runs/**
+!training/visits/runs/experiment-manifest.json
 artifacts/
 /public/engine/campo_core.wasm
 /data/

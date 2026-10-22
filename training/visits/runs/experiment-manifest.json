@@ -1,0 +1,261 @@
+{
+  "dataset": {
+    "kaggle_slug": "juliavalente/data-from-visits-to-the-trough-of-nellore-cattle",
+    "version": 2,
+    "license": "CC-BY-NC-SA-4.0",
+    "archive_sha256": "fd2cfd016503dcff40be2931a6bd04a7185d020c811f6cafa08ec3925d9b5884",
+    "csv_sha256": "37fbe08c882723b15fe028bcb5810fff52a41b3334ef73593814e0674e8f1408",
+    "redistributed": false
+  },
+  "kaggle_mlp": {
+    "kernel_id": "pascalcoimbra/campo-vivo-nellore-next-visit-gap-benchmark",
+    "version": 1,
+    "visibility": "private",
+    "status": "COMPLETE",
+    "accelerator": "Tesla T4",
+    "runtime": {
+      "device": "cuda",
+      "cuda_available": true,
+      "gpu_name": "Tesla T4",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "seed": 20261022
+    },
+    "source_script_sha256": "bd8f79fbf18795ce9e6aad529c00911ce1264a7c6b1d4fc0f0dd771cd6b36759",
+    "artifacts": {
+      "log_sha256": "4ac5582cf8ef5359f67903df9c75246a89daaaf5f6b2562b7adc39d26c7b5ffd",
+      "evaluation_sha256": "dca7eca5f4873b570f2cfe57648d047a13c01b680c33ee27bc53245114564413",
+      "animal_checkpoint_sha256": "2ba33119ee50434253e372bae642e09b34705b9d3a3548ea5d8b856f11f9b5cd",
+      "future_time_checkpoint_sha256": "b19917975d3cd9f25799f511cc2859b33dbdf28bb8909c036b69376542e5f2f7"
+    },
+    "results": {
+      "animal_holdout": {
+        "train_rows": 52562,
+        "validation_rows": 19060,
+        "test_rows": 17906,
+        "selected_epoch": 2,
+        "optimizer_steps": 260,
+        "validation_baseline": "training_hourly_median",
+        "test_metrics": {
+          "neural_mlp": {
+            "n": 17906,
+            "mae_hours_pooled": 0.18804821469826058,
+            "mae_log1p_hours_pooled": 0.10859745185578866,
+            "macro_animal_mae_hours": 0.19677657973384313
+          },
+          "training_hourly_median": {
+            "n": 17906,
+            "mae_hours_pooled": 0.16353013277501185,
+            "mae_log1p_hours_pooled": 0.08521247797865993,
+            "macro_animal_mae_hours": 0.17191412142322546
+          },
+          "persistence_previous_gap": {
+            "n": 17906,
+            "mae_hours_pooled": 0.30634737588639055,
+            "mae_log1p_hours_pooled": 0.1550707619358084,
+            "macro_animal_mae_hours": 0.3205821078151617
+          }
+        },
+        "delta_macro_animal_mae_mlp_minus_hourly_ci95": [
+          0.020533257491304153,
+          0.030061119248744446
+        ]
+      },
+      "future_time_holdout": {
+        "train_rows": 51514,
+        "validation_rows": 16992,
+        "test_rows": 20950,
+        "selected_epoch": 18,
+        "optimizer_steps": 676,
+        "validation_baseline": "training_hourly_median",
+        "test_metrics": {
+          "neural_mlp": {
+            "n": 20950,
+            "mae_hours_pooled": 0.19185319450683475,
+            "mae_log1p_hours_pooled": 0.10463136022846714,
+            "macro_animal_mae_hours": 0.19799460320548945
+          },
+          "training_hourly_median": {
+            "n": 20950,
+            "mae_hours_pooled": 0.1721992440056556,
+            "mae_log1p_hours_pooled": 0.08594821342985635,
+            "macro_animal_mae_hours": 0.17887874252585764
+          },
+          "persistence_previous_gap": {
+            "n": 20950,
+            "mae_hours_pooled": 0.33354089078194044,
+            "mae_log1p_hours_pooled": 0.1586766122440367,
+            "macro_animal_mae_hours": 0.34648684984937306
+          }
+        },
+        "delta_macro_animal_mae_mlp_minus_hourly_ci95": [
+          0.01715268048953502,
+          0.020910557389829366
+        ]
+      }
+    }
+  },
+  "local_cpu_reproduction": {
+    "runtime": {
+      "device": "cpu",
+      "cuda_available": false,
+      "gpu_name": null,
+      "torch_version": "2.14.1+cpu",
+      "cuda_version": null,
+      "seed": 20261022
+    },
+    "metrics_match_kaggle_within_expected_gpu_cpu_numerics": true,
+    "results": {
+      "animal_holdout": {
+        "test_metrics": {
+          "neural_mlp": {
+            "n": 17906,
+            "mae_hours_pooled": 0.18829885304526825,
+            "mae_log1p_hours_pooled": 0.10883426667083158,
+            "macro_animal_mae_hours": 0.19713502685962098
+          },
+          "training_hourly_median": {
+            "n": 17906,
+            "mae_hours_pooled": 0.16353013277501185,
+            "mae_log1p_hours_pooled": 0.08521247797865994,
+            "macro_animal_mae_hours": 0.17191412142322546
+          },
+          "persistence_previous_gap": {
+            "n": 17906,
+            "mae_hours_pooled": 0.3063473758863905,
+            "mae_log1p_hours_pooled": 0.15507076193580838,
+            "macro_animal_mae_hours": 0.3205821078151617
+          }
+        }
+      },
+      "future_time_holdout": {
+        "test_metrics": {
+          "neural_mlp": {
+            "n": 20950,
+            "mae_hours_pooled": 0.1907045756924485,
+            "mae_log1p_hours_pooled": 0.1035581197267822,
+            "macro_animal_mae_hours": 0.19702812229205358
+          },
+          "training_hourly_median": {
+            "n": 20950,
+            "mae_hours_pooled": 0.1721992440056556,
+            "mae_log1p_hours_pooled": 0.08594821342985635,
+            "macro_animal_mae_hours": 0.17887874252585764
+          },
+          "persistence_previous_gap": {
+            "n": 20950,
+            "mae_hours_pooled": 0.33354089078194044,
+            "mae_log1p_hours_pooled": 0.15867661224403673,
+            "macro_animal_mae_hours": 0.34648684984937306
+          }
+        }
+      }
+    },
+    "reproducibility": {
+      "same_animal_ids_and_temporal_dates": true,
+      "same_partition_row_counts": true,
+      "hourly_median_baseline_exact_match_on_both_views": true,
+      "mlp_pooled_mae_absolute_gpu_cpu_delta_hours": {
+        "animal_holdout": 0.00025063834700767007,
+        "future_time_holdout_exploratory": 0.001148618814386243
+      },
+      "note": "Small MLP metric differences are expected from CUDA vs CPU floating-point execution; split assignments and non-neural baseline metrics match exactly."
+    },
+    "artifact_sha256": {
+      "evaluation": "fe9d69686afddff5d5d8f8ca1bb8fc3c3752d772dcceb50efe636c228b3c2088",
+      "animal_checkpoint": "50aa7184586862666c81629d412b33fe7b4ab617dfdfb7e46179c0e1baf2fc4c",
+      "future_checkpoint": "d406a009e531c11cdb102a8d322bbc44b3834e1c1144889219a3b6c3435ee122"
+    }
+  },
+  "extratrees_cpu_iteration": {
+    "source_script_sha256": "85faf199f42ea13891612ff3d0653beb0f9c0a828959dcab4f026e7dd2e60383",
+    "runtime": {
+      "device": "CPU",
+      "scikit_learn": "1.6.1",
+      "numpy": "2.5.4"
+    },
+    "selection_metric": "validation macro-animal MAE in hours; four fixed candidates",
+    "selected_params": {
+      "n_estimators": 80,
+      "max_features": 0.7,
+      "min_samples_leaf": 12,
+      "max_depth": null,
+      "criterion": "squared_error"
+    },
+    "animal_holdout_validity": "held-out animal IDs were disjoint from all model selection",
+    "temporal_holdout_validity": "exploratory only: same dates were inspected and model selection validation included all dates; not independent or blinded",
+    "results": {
+      "animal_holdout": {
+        "train_rows": 52562,
+        "validation_rows": 19060,
+        "test_rows": 17906,
+        "test_metrics": {
+          "extra_trees": {
+            "n": 17906,
+            "mae_hours_pooled": 0.22210269587541334,
+            "mae_log1p_hours_pooled": 0.1389420260233042,
+            "macro_animal_mae_hours": 0.2288518837896153
+          },
+          "training_hourly_median": {
+            "n": 17906,
+            "mae_hours_pooled": 0.16353013277501185,
+            "mae_log1p_hours_pooled": 0.08521247797865994,
+            "macro_animal_mae_hours": 0.17191412142322546
+          },
+          "persistence_previous_gap": {
+            "n": 17906,
+            "mae_hours_pooled": 0.3063473758863905,
+            "mae_log1p_hours_pooled": 0.15507076193580838,
+            "macro_animal_mae_hours": 0.3205821078151617
+          }
+        },
+        "delta_macro_animal_mae_tree_minus_hourly_ci95": [
+          0.05111188766802976,
+          0.06425198112894562
+        ]
+      },
+      "future_time_holdout": {
+        "train_rows": 51514,
+        "validation_rows": 16992,
+        "test_rows": 20950,
+        "test_metrics": {
+          "extra_trees": {
+            "n": 20950,
+            "mae_hours_pooled": 0.23229951635657137,
+            "mae_log1p_hours_pooled": 0.14076938892219462,
+            "macro_animal_mae_hours": 0.23785626266239904
+          },
+          "training_hourly_median": {
+            "n": 20950,
+            "mae_hours_pooled": 0.1721992440056556,
+            "mae_log1p_hours_pooled": 0.08594821342985635,
+            "macro_animal_mae_hours": 0.17887874252585764
+          },
+          "persistence_previous_gap": {
+            "n": 20950,
+            "mae_hours_pooled": 0.33354089078194044,
+            "mae_log1p_hours_pooled": 0.15867661224403673,
+            "macro_animal_mae_hours": 0.34648684984937306
+          }
+        },
+        "delta_macro_animal_mae_tree_minus_hourly_ci95": [
+          0.05591466766832063,
+          0.06180528972549548
+        ]
+      }
+    },
+    "artifact_sha256": {
+      "evaluation": "e9983f564d78aed8345bacd7009b3f83b47a247b1dccd9bdc4f07e7f3eecb1a5",
+      "animal_checkpoint": "51b66387078adadc46721572bf7e55a7bb83f967809292e1d44851194d4329b9",
+      "future_checkpoint": "25c6bf31b8e66571550a67b8526a6a92de16a5987b4c28797f18b6eafc5fca98"
+    }
+  },
+  "limits": [
+    "Only 21 days in one feeding-efficiency cohort; no external farm/cohort validation.",
+    "Next-visit interval is not a behavioral, intake, water, physiology, or causal label.",
+    "The animal holdout result for ExtraTrees loses to the hourly-median baseline; do not integrate it as an animal policy.",
+    "Temporal metrics are exploratory after their holdout was inspected. A new cohort is required for independent temporal/external validation.",
+    "Data-derived checkpoints/joblib and detailed outputs are not included in this repository due to CC BY-NC-SA-4.0 and unresolved redistribution/commercial-use implications. Outputs remain recoverable from the private Kaggle kernel."
+  ],
+  "raw_or_model_artifacts_in_repo": false
+}
