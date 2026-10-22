@@ -1,0 +1,914 @@
+{
+  "experiment": "synthetic_cow_resource_policy_dqn",
+  "claim_scope": "The policy learns only the authored synthetic environment. It does not infer causal real-cow behavior.",
+  "environment": {
+    "api": "Gymnasium reset/step",
+    "version": 2,
+    "gymnasium_installed": true,
+    "observation_fields": [
+      "hunger",
+      "thirst",
+      "fatigue",
+      "heat_load",
+      "grass",
+      "water",
+      "shade",
+      "neighbor_presence",
+      "social_stress"
+    ],
+    "actions": [
+      "graze",
+      "drink",
+      "rest",
+      "seek_shade",
+      "follow_herd"
+    ],
+    "horizon_steps": 240,
+    "reward": "potential(after)-potential(before) - resource depletion cost - unavailable-action penalty - high-need penalties; see train_policy.py"
+  },
+  "training": {
+    "seed": 41,
+    "steps": 50000,
+    "updates": 12373,
+    "epsilon_final": 0.040000000000000036,
+    "device": "cuda",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "eval_seeds_disjoint": true,
+    "evaluation_seeds": [
+      1000000,
+      1000001,
+      1000002,
+      1000003,
+      1000004,
+      1000005,
+      1000006,
+      1000007,
+      1000008,
+      1000009,
+      1000010,
+      1000011,
+      1000012,
+      1000013,
+      1000014,
+      1000015,
+      1000016,
+      1000017,
+      1000018,
+      1000019
+    ]
+  },
+  "evaluation": {
+    "dqn": {
+      "return": {
+        "mean": -17.34997495955322,
+        "std": 3.4166730020781113
+      },
+      "final_hunger": {
+        "mean": 0.08531553137581796,
+        "std": 0.0859855528599617
+      },
+      "final_thirst": {
+        "mean": 0.5231380432844162,
+        "std": 0.07371460164987699
+      },
+      "final_fatigue": {
+        "mean": 0.024999999441206455,
+        "std": 0.024696047054641502
+      },
+      "final_heat": {
+        "mean": 0.005459267541300506,
+        "std": 0.007447578507289928
+      },
+      "final_neighbor_presence": {
+        "mean": 0.9867444157600402,
+        "std": 0.01821635164948017
+      },
+      "final_social_stress": {
+        "mean": 0.026800001878291367,
+        "std": 0.031176241946819436
+      },
+      "final_need_mean": {
+        "mean": 0.1331425651907921,
+        "std": 0.021391112410803534
+      },
+      "grass_left": {
+        "mean": 0.29686848148703576,
+        "std": 0.1916923942131364
+      },
+      "water_left": {
+        "mean": 0.06372961951419712,
+        "std": 0.03169059800681875
+      }
+    },
+    "heuristic": {
+      "return": {
+        "mean": -50.198964622453786,
+        "std": 4.880107885088225
+      },
+      "final_hunger": {
+        "mean": 0.5824848413467407,
+        "std": 0.04560236824406982
+      },
+      "final_thirst": {
+        "mean": 0.9216753423213959,
+        "std": 0.04794429513792997
+      },
+      "final_fatigue": {
+        "mean": 0.01094999983906746,
+        "std": 0.010419995813261251
+      },
+      "final_heat": {
+        "mean": 0.006120299303438515,
+        "std": 0.005963305183735817
+      },
+      "final_neighbor_presence": {
+        "mean": 0.9946610867977143,
+        "std": 0.009284152915107828
+      },
+      "final_social_stress": {
+        "mean": 0.012000000430271029,
+        "std": 0.009883532580843533
+      },
+      "final_need_mean": {
+        "mean": 0.30664610415697097,
+        "std": 0.012723965599011238
+      },
+      "grass_left": {
+        "mean": 0.022200001357123255,
+        "std": 0.011998246324065029
+      },
+      "water_left": {
+        "mean": 0.020249999593943357,
+        "std": 0.010109271364150976
+      }
+    },
+    "paired_return_delta_mean": 32.848989662900564,
+    "paired_return_delta_std": 2.857358367244593,
+    "dqn_episodes": [
+      {
+        "return": -12.170928747975267,
+        "final_hunger": 0.16205815970897675,
+        "final_thirst": 0.39391204714775085,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9453332424163818,
+        "final_social_stress": 0.056000005453825,
+        "final_need_mean": 0.12239404022693634,
+        "grass_left": 0.14310109615325928,
+        "water_left": 0.04169003292918205,
+        "action_counts": [
+          22,
+          25,
+          26,
+          113,
+          54
+        ]
+      },
+      {
+        "return": -14.187706365250051,
+        "final_hunger": 0.028087161481380463,
+        "final_thirst": 0.49579113721847534,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9780822396278381,
+        "final_social_stress": 0.024000000208616257,
+        "final_need_mean": 0.10957565158605576,
+        "grass_left": 0.22378204762935638,
+        "water_left": 0.08274921774864197,
+        "action_counts": [
+          24,
+          22,
+          38,
+          90,
+          66
+        ]
+      },
+      {
+        "return": -15.701207651756704,
+        "final_hunger": 0.052000004798173904,
+        "final_thirst": 0.5184823870658875,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.01047576405107975,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.12019161880016327,
+        "grass_left": 0.46725577116012573,
+        "water_left": 0.07085593044757843,
+        "action_counts": [
+          23,
+          24,
+          54,
+          77,
+          62
+        ]
+      },
+      {
+        "return": -12.925512704998255,
+        "final_hunger": 0.16552358865737915,
+        "final_thirst": 0.4197014272212982,
+        "final_fatigue": 0.023999998345971107,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9983670115470886,
+        "final_social_stress": 0.04800000414252281,
+        "final_need_mean": 0.1314449906349182,
+        "grass_left": 0.10748299211263657,
+        "water_left": 0.04234227538108826,
+        "action_counts": [
+          24,
+          25,
+          28,
+          112,
+          51
+        ]
+      },
+      {
+        "return": -15.37369998311624,
+        "final_hunger": 0.020000001415610313,
+        "final_thirst": 0.5286063551902771,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.11292126029729843,
+        "grass_left": 0.41874945163726807,
+        "water_left": 0.06998030096292496,
+        "action_counts": [
+          21,
+          23,
+          52,
+          77,
+          67
+        ]
+      },
+      {
+        "return": -19.64014174719341,
+        "final_hunger": 0.024000002071261406,
+        "final_thirst": 0.5794498920440674,
+        "final_fatigue": 0.04399999976158142,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.00800000037997961,
+        "final_need_mean": 0.1310899704694748,
+        "grass_left": 0.5940678119659424,
+        "water_left": 0.06414314359426498,
+        "action_counts": [
+          21,
+          20,
+          59,
+          65,
+          75
+        ]
+      },
+      {
+        "return": -13.875362810213119,
+        "final_hunger": 0.04400000348687172,
+        "final_thirst": 0.4875918924808502,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.0034386327024549246,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.11100610345602036,
+        "grass_left": 0.32137686014175415,
+        "water_left": 0.07487630844116211,
+        "action_counts": [
+          23,
+          24,
+          38,
+          88,
+          67
+        ]
+      },
+      {
+        "return": -21.135078960563987,
+        "final_hunger": 0.23543189465999603,
+        "final_thirst": 0.35691037774086,
+        "final_fatigue": 0.009999999776482582,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.00800000037997961,
+        "final_need_mean": 0.12206844985485077,
+        "grass_left": 0.14220231771469116,
+        "water_left": 0.06762225180864334,
+        "action_counts": [
+          22,
+          23,
+          67,
+          68,
+          60
+        ]
+      },
+      {
+        "return": -18.372556914575398,
+        "final_hunger": 0.04800000414252281,
+        "final_thirst": 0.5694357752799988,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.016631871461868286,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.13081352412700653,
+        "grass_left": 0.43386930227279663,
+        "water_left": 0.04399994760751724,
+        "action_counts": [
+          22,
+          21,
+          34,
+          100,
+          63
+        ]
+      },
+      {
+        "return": -21.09715675516054,
+        "final_hunger": 0.012000000104308128,
+        "final_thirst": 0.6316904425621033,
+        "final_fatigue": 0.012999996542930603,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9688294529914856,
+        "final_social_stress": 0.03200000151991844,
+        "final_need_mean": 0.13773809373378754,
+        "grass_left": 0.25697794556617737,
+        "water_left": 0.07173855602741241,
+        "action_counts": [
+          21,
+          18,
+          32,
+          104,
+          65
+        ]
+      },
+      {
+        "return": -16.465393856167793,
+        "final_hunger": 0.056000005453825,
+        "final_thirst": 0.5277557373046875,
+        "final_fatigue": 0.050999999046325684,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9744129180908203,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.13015113770961761,
+        "grass_left": 0.34736335277557373,
+        "water_left": 0.037043601274490356,
+        "action_counts": [
+          23,
+          23,
+          27,
+          108,
+          59
+        ]
+      },
+      {
+        "return": -21.64538969111163,
+        "final_hunger": 0.1749754101037979,
+        "final_thirst": 0.5957559943199158,
+        "final_fatigue": 0.07400000095367432,
+        "final_heat": 0.00934399664402008,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.17081508040428162,
+        "grass_left": 0.12091191112995148,
+        "water_left": 0.039530664682388306,
+        "action_counts": [
+          23,
+          19,
+          35,
+          82,
+          81
+        ]
+      },
+      {
+        "return": -19.646711518988013,
+        "final_hunger": 0.004000000189989805,
+        "final_thirst": 0.5994347333908081,
+        "final_fatigue": 0.07400000095367432,
+        "final_heat": 0.02538669854402542,
+        "final_neighbor_presence": 0.985180139541626,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.14376428723335266,
+        "grass_left": 0.28807103633880615,
+        "water_left": 0.03372231125831604,
+        "action_counts": [
+          24,
+          19,
+          30,
+          105,
+          62
+        ]
+      },
+      {
+        "return": -15.512146482244134,
+        "final_hunger": 0.012000000104308128,
+        "final_thirst": 0.5089065432548523,
+        "final_fatigue": 0.023999998345971107,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9850329160690308,
+        "final_social_stress": 0.04000000283122063,
+        "final_need_mean": 0.11698131263256073,
+        "grass_left": 0.25846797227859497,
+        "water_left": 0.031070919707417488,
+        "action_counts": [
+          21,
+          21,
+          34,
+          93,
+          71
+        ]
+      },
+      {
+        "return": -20.721732390811667,
+        "final_hunger": 0.27645984292030334,
+        "final_thirst": 0.536819577217102,
+        "final_fatigue": 0.05999999865889549,
+        "final_heat": 0.009934112429618835,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.17664270102977753,
+        "grass_left": 0.12896978855133057,
+        "water_left": 0.07334450632333755,
+        "action_counts": [
+          22,
+          21,
+          30,
+          92,
+          75
+        ]
+      },
+      {
+        "return": -19.306318564340472,
+        "final_hunger": 0.06400000303983688,
+        "final_thirst": 0.5143918991088867,
+        "final_fatigue": 0.0,
+        "final_heat": 0.010996926575899124,
+        "final_neighbor_presence": 0.973352313041687,
+        "final_social_stress": 0.11200001090765,
+        "final_need_mean": 0.14027777314186096,
+        "grass_left": 0.8823968768119812,
+        "water_left": 0.17065751552581787,
+        "action_counts": [
+          15,
+          17,
+          59,
+          92,
+          57
+        ]
+      },
+      {
+        "return": -14.457376754842699,
+        "final_hunger": 0.04989699274301529,
+        "final_thirst": 0.5189761519432068,
+        "final_fatigue": 0.0429999977350235,
+        "final_heat": 0.007225098088383675,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.12381964921951294,
+        "grass_left": 0.2532574534416199,
+        "water_left": 0.09468794614076614,
+        "action_counts": [
+          22,
+          23,
+          27,
+          103,
+          65
+        ]
+      },
+      {
+        "return": -13.770377108827233,
+        "final_hunger": 0.031078040599822998,
+        "final_thirst": 0.48982399702072144,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9425147771835327,
+        "final_social_stress": 0.08000000566244125,
+        "final_need_mean": 0.1201804056763649,
+        "grass_left": 0.17230485379695892,
+        "water_left": 0.048031751066446304,
+        "action_counts": [
+          24,
+          23,
+          28,
+          100,
+          65
+        ]
+      },
+      {
+        "return": -16.75764022534713,
+        "final_hunger": 0.024000002071261406,
+        "final_thirst": 0.5393850803375244,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9837833046913147,
+        "final_social_stress": 0.06400000303983688,
+        "final_need_mean": 0.12547701597213745,
+        "grass_left": 0.2560942769050598,
+        "water_left": 0.03546852245926857,
+        "action_counts": [
+          22,
+          21,
+          31,
+          110,
+          56
+        ]
+      },
+      {
+        "return": -24.23705995758064,
+        "final_hunger": 0.22279950976371765,
+        "final_thirst": 0.6499394178390503,
+        "final_fatigue": 0.023000000044703484,
+        "final_heat": 0.01575225032866001,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.18549823760986328,
+        "grass_left": 0.1206665113568306,
+        "water_left": 0.08103668689727783,
+        "action_counts": [
+          22,
+          18,
+          38,
+          81,
+          81
+        ]
+      }
+    ],
+    "heuristic_episodes": [
+      {
+        "return": -44.348083961289376,
+        "final_hunger": 0.5989400148391724,
+        "final_thirst": 0.8431446552276611,
+        "final_fatigue": 0.0,
+        "final_heat": 0.015016836114227772,
+        "final_neighbor_presence": 0.9778880476951599,
+        "final_social_stress": 0.024000000208616257,
+        "final_need_mean": 0.2962203025817871,
+        "grass_left": 0.00800000037997961,
+        "water_left": 0.017999999225139618,
+        "action_counts": [
+          29,
+          32,
+          74,
+          52,
+          53
+        ]
+      },
+      {
+        "return": -49.10795361921191,
+        "final_hunger": 0.578444242477417,
+        "final_thirst": 0.9112443923950195,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.005087793804705143,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.30295529961586,
+        "grass_left": 0.01600000075995922,
+        "water_left": 0.027000000700354576,
+        "action_counts": [
+          32,
+          30,
+          79,
+          43,
+          56
+        ]
+      },
+      {
+        "return": -44.508503198157996,
+        "final_hunger": 0.5297495126724243,
+        "final_thirst": 0.8922081589698792,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9902589321136475,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.2875915467739105,
+        "grass_left": 0.036000002175569534,
+        "water_left": 0.014999998733401299,
+        "action_counts": [
+          34,
+          32,
+          75,
+          49,
+          50
+        ]
+      },
+      {
+        "return": -44.47808502148837,
+        "final_hunger": 0.5785040259361267,
+        "final_thirst": 0.8593993782997131,
+        "final_fatigue": 0.0,
+        "final_heat": 0.005544210784137249,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.2918895184993744,
+        "grass_left": 0.020000001415610313,
+        "water_left": 0.024000000208616257,
+        "action_counts": [
+          29,
+          32,
+          70,
+          59,
+          50
+        ]
+      },
+      {
+        "return": -46.55925121111795,
+        "final_hunger": 0.5618508458137512,
+        "final_thirst": 0.9014858603477478,
+        "final_fatigue": 0.0,
+        "final_heat": 0.010038015432655811,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.03200000151991844,
+        "final_need_mean": 0.30107492208480835,
+        "grass_left": 0.00800000037997961,
+        "water_left": 0.011999999172985554,
+        "action_counts": [
+          33,
+          31,
+          87,
+          28,
+          61
+        ]
+      },
+      {
+        "return": -53.04936895892024,
+        "final_hunger": 0.5099870562553406,
+        "final_thirst": 0.9884305000305176,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.3028835356235504,
+        "grass_left": 0.024000002071261406,
+        "water_left": 0.020999999716877937,
+        "action_counts": [
+          33,
+          28,
+          67,
+          65,
+          47
+        ]
+      },
+      {
+        "return": -44.806769128888845,
+        "final_hunger": 0.5645254254341125,
+        "final_thirst": 0.8798612356185913,
+        "final_fatigue": 0.023000000044703484,
+        "final_heat": 0.0034386327024549246,
+        "final_neighbor_presence": 0.9960188865661621,
+        "final_social_stress": 0.024000000208616257,
+        "final_need_mean": 0.29896506667137146,
+        "grass_left": 0.004000000189989805,
+        "water_left": 0.017999999225139618,
+        "action_counts": [
+          33,
+          32,
+          83,
+          35,
+          57
+        ]
+      },
+      {
+        "return": -48.32232150621712,
+        "final_hunger": 0.649078905582428,
+        "final_thirst": 0.8502678275108337,
+        "final_fatigue": 0.020999999716877937,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.00800000037997961,
+        "final_need_mean": 0.305669367313385,
+        "grass_left": 0.024000002071261406,
+        "water_left": 0.008999999612569809,
+        "action_counts": [
+          28,
+          31,
+          67,
+          67,
+          47
+        ]
+      },
+      {
+        "return": -48.16585321351886,
+        "final_hunger": 0.5352532863616943,
+        "final_thirst": 0.9262744784355164,
+        "final_fatigue": 0.0,
+        "final_heat": 0.012917598709464073,
+        "final_neighbor_presence": 0.9930561780929565,
+        "final_social_stress": 0.00800000037997961,
+        "final_need_mean": 0.29648908972740173,
+        "grass_left": 0.04000000283122063,
+        "water_left": 0.032999999821186066,
+        "action_counts": [
+          32,
+          28,
+          69,
+          63,
+          48
+        ]
+      },
+      {
+        "return": -55.83749781548977,
+        "final_hunger": 0.5980099439620972,
+        "final_thirst": 0.977948009967804,
+        "final_fatigue": 0.023000000044703484,
+        "final_heat": 0.021971233189105988,
+        "final_neighbor_presence": 0.9855359196662903,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.3273858428001404,
+        "grass_left": 0.004000000189989805,
+        "water_left": 0.035999998450279236,
+        "action_counts": [
+          30,
+          26,
+          75,
+          55,
+          54
+        ]
+      },
+      {
+        "return": -44.85888647241518,
+        "final_hunger": 0.5217280387878418,
+        "final_thirst": 0.8976443409919739,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.007081350311636925,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.28929072618484497,
+        "grass_left": 0.01600000075995922,
+        "water_left": 0.020999999716877937,
+        "action_counts": [
+          31,
+          30,
+          63,
+          68,
+          48
+        ]
+      },
+      {
+        "return": -58.63537099584937,
+        "final_hunger": 0.6422181725502014,
+        "final_thirst": 0.9778991937637329,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.00934399664402008,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.32989227771759033,
+        "grass_left": 0.012000000104308128,
+        "water_left": 0.020999999716877937,
+        "action_counts": [
+          30,
+          27,
+          91,
+          26,
+          66
+        ]
+      },
+      {
+        "return": -53.17498665116727,
+        "final_hunger": 0.5591726303100586,
+        "final_thirst": 0.9698535203933716,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.004018865991383791,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.31060901284217834,
+        "grass_left": 0.036000002175569534,
+        "water_left": 0.032999999821186066,
+        "action_counts": [
+          32,
+          26,
+          67,
+          67,
+          48
+        ]
+      },
+      {
+        "return": -52.17285990016535,
+        "final_hunger": 0.6086140275001526,
+        "final_thirst": 0.9275549650192261,
+        "final_fatigue": 0.010999999940395355,
+        "final_heat": 0.007045520469546318,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.31404292583465576,
+        "grass_left": 0.036000002175569534,
+        "water_left": 0.003000000026077032,
+        "action_counts": [
+          29,
+          29,
+          83,
+          40,
+          59
+        ]
+      },
+      {
+        "return": -53.76291334209964,
+        "final_hunger": 0.6660125851631165,
+        "final_thirst": 0.9171592593193054,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.0018566411454230547,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.3210057020187378,
+        "grass_left": 0.036000002175569534,
+        "water_left": 0.030000001192092896,
+        "action_counts": [
+          28,
+          29,
+          76,
+          52,
+          55
+        ]
+      },
+      {
+        "return": -56.22826163005084,
+        "final_hunger": 0.5339213609695435,
+        "final_thirst": 1.0,
+        "final_fatigue": 0.019999999552965164,
+        "final_heat": 0.010996926575899124,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.0,
+        "final_need_mean": 0.3129836618900299,
+        "grass_left": 0.012000000104308128,
+        "water_left": 0.017999999225139618,
+        "action_counts": [
+          33,
+          27,
+          73,
+          56,
+          51
+        ]
+      },
+      {
+        "return": -48.568934514187276,
+        "final_hunger": 0.5890979170799255,
+        "final_thirst": 0.9030253291130066,
+        "final_fatigue": 0.020999999716877937,
+        "final_heat": 0.007225098088383675,
+        "final_neighbor_presence": 0.9873411059379578,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.3072696924209595,
+        "grass_left": 0.020000001415610313,
+        "water_left": 0.003000000026077032,
+        "action_counts": [
+          30,
+          32,
+          72,
+          55,
+          51
+        ]
+      },
+      {
+        "return": -48.24778074910864,
+        "final_hunger": 0.6007397174835205,
+        "final_thirst": 0.8941593170166016,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9655851721763611,
+        "final_social_stress": 0.024000000208616257,
+        "final_need_mean": 0.30377981066703796,
+        "grass_left": 0.036000002175569534,
+        "water_left": 0.008999999612569809,
+        "action_counts": [
+          31,
+          31,
+          82,
+          39,
+          57
+        ]
+      },
+      {
+        "return": -49.28874373016879,
+        "final_hunger": 0.5695818066596985,
+        "final_thirst": 0.9282798171043396,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0,
+        "final_neighbor_presence": 0.9975374937057495,
+        "final_social_stress": 0.01600000075995922,
+        "final_need_mean": 0.3027723431587219,
+        "grass_left": 0.024000002071261406,
+        "water_left": 0.035999998450279236,
+        "action_counts": [
+          30,
+          28,
+          73,
+          58,
+          51
+        ]
+      },
+      {
+        "return": -59.85686682956293,
+        "final_hunger": 0.6542673110961914,
+        "final_thirst": 0.9876666069030762,
+        "final_fatigue": 0.0,
+        "final_heat": 0.0008232661057263613,
+        "final_neighbor_presence": 1.0,
+        "final_social_stress": 0.00800000037997961,
+        "final_need_mean": 0.33015143871307373,
+        "grass_left": 0.03200000151991844,
+        "water_left": 0.017999999225139618,
+        "action_counts": [
+          29,
+          27,
+          84,
+          40,
+          60
+        ]
+      }
+    ]
+  },
+  "artifact": "policy_weights.json"
+}
