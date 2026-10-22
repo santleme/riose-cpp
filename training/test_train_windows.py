@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import unittest
+import tempfile
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from training.train import _extract_windows
+from training.train import _extract_windows, verify_dataset_hash
 
 
 def rows(times: list[float], missing_sensor_at: set[int] | None = None) -> pd.DataFrame:
@@ -42,6 +44,16 @@ class ExtractWindowsContinuityTests(unittest.TestCase):
         x, _, _, diag = _extract_windows(rows([0.0, 0.1, 0.2, 0.5, 0.6, 0.7]), window_samples=2)
         self.assertEqual(len(x), 2)  # Three windows would bridge across the 0.3 s gap.
         self.assertEqual(diag["sampling_gap_breaks"], 1)
+
+
+class DatasetPinTests(unittest.TestCase):
+    def test_rejects_unpinned_dataset_and_explicit_opt_in_returns_hash(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "data.csv"
+            path.write_bytes(b"changed dataset")
+            with self.assertRaisesRegex(ValueError, "Unpinned Kaggle data"):
+                verify_dataset_hash(path)
+            self.assertEqual(len(verify_dataset_hash(path, allow_unpinned=True)), 64)
 
     def test_duplicate_sample_in_coarse_timestamp_block_is_ambiguous(self):
         x, _, _, diag = _extract_windows(rows([0.0, 0.1, 0.1, 0.2, 0.3]), window_samples=2)

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
 import os
 import subprocess
 import tempfile
@@ -26,6 +27,7 @@ from sklearn.neural_network import MLPClassifier
 
 DATASET = "fandaoerji/cow-nose-ring-data-set"
 DATASET_LICENSE = "CC0-1.0"
+DATASET_CSV_SHA256 = "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f"
 LABELS = {0: "feeding", 1: "rumination", 2: "standing", 3: "lying", 4: "walking"}
 AXES = ["acc_x", "acc_y", "acc_z"]
 REQUIRED = {"date", "time", "cow_num", *AXES, "behavior"}
@@ -42,6 +44,7 @@ def fetch_kaggle_data(cache_dir: Path) -> Path:
     cache_dir.mkdir(parents=True, exist_ok=True)
     csv_path = cache_dir / "data.csv"
     if csv_path.exists():
+        verify_dataset_hash(csv_path)
         return csv_path
     with tempfile.TemporaryDirectory(prefix="campo-vivo-kaggle-") as tmp:
         subprocess.run(
@@ -53,7 +56,19 @@ def fetch_kaggle_data(cache_dir: Path) -> Path:
             member = next(n for n in zf.namelist() if n.endswith("data.csv"))
             with zf.open(member) as src, csv_path.open("wb") as dst:
                 dst.write(src.read())
+    verify_dataset_hash(csv_path)
     return csv_path
+
+
+def verify_dataset_hash(path: Path, allow_unpinned: bool = False) -> str:
+    """Verify that a real Kaggle run uses the audited, immutable CSV snapshot."""
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest != DATASET_CSV_SHA256 and not allow_unpinned:
+        raise ValueError(
+            f"Unpinned Kaggle data at {path}: SHA-256 {digest}; expected "
+            f"{DATASET_CSV_SHA256}. Audit and explicitly opt in before using a new version."
+        )
+    return digest
 
 
 def kaggle_mounted_data() -> Path | None:
@@ -236,10 +251,17 @@ def main() -> None:
     parser.add_argument("--holdout-animal", default="6", help="Animal ID reserved entirely for evaluation.")
     parser.add_argument("--validation-animal", default="1", help="Training animal reserved for model selection.")
     parser.add_argument("--smoke-synthetic", action="store_true", help="Use generated data; never for model claims.")
+    parser.add_argument("--allow-unpinned-data", action="store_true",
+                        help="Allow a changed Kaggle CSV after explicitly auditing its schema, license, and contents.")
+    parser.add_argument("--require-cuda", action="store_true",
+                        help="Fail before loading data unless a CUDA GPU is visible to PyTorch.")
     parser.add_argument("--trees", type=int, default=300, help="Number of trees for Extra Trees and Random Forest.")
     parser.add_argument("--max-depth", type=int, default=None, help="Optional depth cap for tree baselines.")
     parser.add_argument("--seed", type=int, default=23)
     args = parser.parse_args()
+
+    if args.require_cuda and not _cuda_available():
+        raise RuntimeError("CUDA was required but PyTorch cannot access a CUDA device")
 
     if args.smoke_synthetic:
         frame = synthetic_frame(args.seed)
@@ -247,9 +269,12 @@ def main() -> None:
         license_id = "synthetic"
     else:
         path = args.data or kaggle_mounted_data() or fetch_kaggle_data(args.cache_dir)
+        data_sha256 = verify_dataset_hash(path, allow_unpinned=args.allow_unpinned_data)
         frame = pd.read_csv(path)
         source = f"{DATASET} (data.csv)"
         license_id = DATASET_LICENSE
+    if args.smoke_synthetic:
+        data_sha256 = None
 
     x, y, animals, extraction_diagnostics = _extract_windows(frame)
     test_mask = animals == str(args.holdout_animal)
@@ -321,6 +346,7 @@ def main() -> None:
         joblib.dump(fitted[best_name], args.output_dir / "activity_classifier.joblib", compress=3)
     metadata = {
         "source": source, "license": license_id, "sampling_hz": SAMPLING_HZ, "window_seconds": 5,
+        "source_sha256": data_sha256,
         "window_samples": WINDOW_SAMPLES, "minimum_majority_fraction": 0.8,
         "window_extraction": extraction_diagnostics,
         "feature_names": FEATURE_NAMES, "label_map": LABELS, "seed": args.seed,
@@ -400,7 +426,9 @@ def _train_torch_mlp(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarra
     optimizer = torch.optim.AdamW(net.parameters(), lr=1e-3, weight_decay=1e-3)
     loss_fn = nn.CrossEntropyLoss(weight=loss_weights)
     generator = torch.Generator(device="cpu").manual_seed(seed)
-    for _epoch in range(45):
+    optimizer_steps = 0
+    epochs = 45
+    for _epoch in range(epochs):
         net.train()
         order = torch.randperm(len(xt), generator=generator)
         for batch in order.split(1024):
@@ -409,11 +437,13 @@ def _train_torch_mlp(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarra
             loss = loss_fn(net(xt[indices]), yt[indices])
             loss.backward()
             optimizer.step()
+            optimizer_steps += 1
     net.eval()
     with torch.no_grad():
         predicted_index = net(xv).argmax(1).cpu().numpy()
     prediction = classes[predicted_index]
     result = {
+        "training": {"device": str(device), "epochs": epochs, "optimizer_steps": optimizer_steps},
         "macro_f1": float(f1_score(y_test, prediction, labels=classes, average="macro", zero_division=0)),
         "weighted_f1": float(f1_score(y_test, prediction, average="weighted", zero_division=0)),
         "classification_report": classification_report(y_test, prediction, labels=classes,
