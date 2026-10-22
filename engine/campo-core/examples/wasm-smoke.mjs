@@ -4,9 +4,18 @@ import { readFile } from 'node:fs/promises';
 const wasmPath = new URL('../target/wasm32-unknown-unknown/release/campo_core.wasm', import.meta.url);
 const bytes = await readFile(wasmPath);
 const { instance } = await WebAssembly.instantiate(bytes);
-const { campo_core_abi_version, campo_step_patch_v1 } = instance.exports;
+const { campo_core_abi_version, campo_step_patch_v1, memory, __heap_base } = instance.exports;
 
 assert.equal(campo_core_abi_version(), 1);
-assert.equal(campo_step_patch_v1(100, 8, 10, 5, 0, 4, 2, 105, 0, 0, 0, 0, 0), 0);
+const scratch = Math.ceil(Number(__heap_base.value) / 8) * 8;
+const status = campo_step_patch_v1(100, 8, 10, 5, 0, 4, 2, 105,
+  scratch, scratch + 8, scratch + 16, scratch + 24, scratch + 32);
+assert.equal(status, 0);
+const values = new DataView(memory.buffer);
+assert.equal(values.getFloat64(scratch, true), 0);
+assert.equal(values.getFloat64(scratch + 8, true), 6);
+assert.equal(values.getFloat64(scratch + 16, true), 3);
+assert.equal(values.getFloat64(scratch + 24, true), 4);
+assert.equal(values.getFloat64(scratch + 32, true), 3);
 assert.equal(campo_step_patch_v1(-1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), -1);
-console.log('WASM ABI v1 instantiated; valid and invalid calls returned expected status.');
+console.log('WASM ABI v1 instantiated; output ledgers and invalid inputs verified.');

@@ -1,0 +1,38 @@
+name: Scientific core
+
+on:
+  push:
+    paths:
+      - 'engine/campo-core/**'
+      - 'src/science-core.ts'
+      - 'scripts/build-wasm.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/science-core.yml'
+  pull_request:
+    paths:
+      - 'engine/campo-core/**'
+      - 'src/science-core.ts'
+      - 'scripts/build-wasm.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/science-core.yml'
+
+jobs:
+  native-and-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: rustfmt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: cargo fmt --check --manifest-path engine/campo-core/Cargo.toml
+      - run: cargo test --manifest-path engine/campo-core/Cargo.toml
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:wasm

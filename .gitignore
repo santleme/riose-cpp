@@ -9,3 +9,4 @@ training/outputs/*
 training/policy/outputs/*
 training/kaggle-output/
 artifacts/
+/public/engine/campo_core.wasm
