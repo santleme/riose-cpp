@@ -11,6 +11,10 @@ on:
       - 'training/data/**'
       - 'training/growth/**'
       - 'training/visits/**'
+      - 'training/train.py'
+      - 'training/test_*.py'
+      - 'training/requirements.txt'
+      - 'training/README.md'
       - '.github/workflows/science-core.yml'
   pull_request:
     paths:
@@ -22,6 +26,10 @@ on:
       - 'training/data/**'
       - 'training/growth/**'
       - 'training/visits/**'
+      - 'training/train.py'
+      - 'training/test_*.py'
+      - 'training/requirements.txt'
+      - 'training/README.md'
       - '.github/workflows/science-core.yml'
 
 jobs:
@@ -42,12 +50,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: python -m pip install -r training/requirements.txt
       - run: npm ci
       - run: npm run build
       - run: npm run test:wasm
       - run: python -m unittest training.data.test_ingest_nellore_trough -v
       - run: python -m unittest training.data.test_audit_nellore_shade -v
+      - run: python -m unittest training.test_train_windows -v
       - run: python -m json.tool training/data/datasets.json > /dev/null
       - run: python -m json.tool training/data/reports/nellore-shade-access-2026-10.json > /dev/null
-      - run: python -m py_compile training/growth/train_growth.py training/visits/train_gap_model.py training/visits/train_gap_extratrees.py
+      - run: python -m py_compile training/train.py training/growth/train_growth.py training/visits/train_gap_model.py training/visits/train_gap_extratrees.py
       - run: python -m json.tool training/visits/runs/experiment-manifest.json > /dev/null
