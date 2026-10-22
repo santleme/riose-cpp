@@ -43,7 +43,7 @@ export class FarmRenderer {
     this.height=Math.max(1,Math.round(this.canvas.clientHeight*this.pixelRatio));
     this.canvas.width=this.width;this.canvas.height=this.height;
     this.ctx.imageSmoothingEnabled=false;
-    if(this.width&&this.width<this.height&&this.zoom===1)this.zoom=2;
+    if(this.width&&this.width<this.height&&this.zoom===1)this.zoom=1.28;
   }
 
   private onKeyDown(e:KeyboardEvent){
