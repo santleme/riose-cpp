@@ -1,0 +1,116 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "kernel_url": "https://www.kaggle.com/code/pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "version": 5,
+  "visibility": "private",
+  "status": "COMPLETE",
+  "status_observed_at_utc": "2026-10-22 23:24:47 UTC",
+  "accelerator": {
+    "requested": "NvidiaTeslaT4",
+    "runtime_device": "cuda",
+    "cuda_required": true,
+    "cuda_available": true,
+    "gpu_name": "Tesla T4"
+  },
+  "dataset": {
+    "slug": "fandaoerji/cow-nose-ring-data-set",
+    "file": "data.csv",
+    "license": "CC0-1.0",
+    "source_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "hash_verified_by_script": true,
+    "input_rows": 1252536
+  },
+  "source": {
+    "branch_commit_at_submission": "9b88f00096b6ba28457d800587422dc11076142d",
+    "script_sha256": "16b021f87e1f5e08be73fa0a49cffabd25be3b3e1efe0d732a6c1e1fb8cd41e0",
+    "kernel_metadata_sha256": "5bc925f23ee28c78ede0a176316f587e0dd84618ea2217cb8a83300d9114674f",
+    "protocol": "Same dataset, parser, seed, animal-group split, features, model families, and hyperparameters as v4. Reproducibility rerun only; no tuning or candidate selection from this run."
+  },
+  "timestamp_parser_diagnostics": {
+    "invalid_timestamp_rows": 0,
+    "missing_sensor_or_label_rows": 0,
+    "reordered_rows": 194827,
+    "timestamp_blocks": 62980,
+    "rows_in_multirow_blocks": 1252238,
+    "ambiguous_blocks_excluded": 10184,
+    "sampling_gap_breaks": 10181,
+    "contiguous_runs": 5817,
+    "candidate_windows": 18570,
+    "discarded_mixed_label_windows": 124,
+    "accepted_windows": 18446,
+    "matches_local_parser_audit": true,
+    "sampling_assumption": "Within each whole-second timestamp bucket, CSV row order is treated as 10 Hz sensor order; sub-second timing cannot be verified."
+  },
+  "split_sizes": {
+    "total_windows": 18446,
+    "fit": 13746,
+    "validation": 485,
+    "train_including_validation": 14231,
+    "test": 4215,
+    "fit_animals": 5,
+    "validation_animals": 1,
+    "test_animals": 1
+  },
+  "validation_selection": {
+    "selected_model": "extra_trees",
+    "macro_f1": {
+      "extra_trees": 0.6931093067820383,
+      "random_forest": 0.60178803115936,
+      "mlp": 0.6608756576710864,
+      "torch_mlp_cuda": 0.36208637853315234
+    }
+  },
+  "test_metrics_exploratory_post_selection": {
+    "macro_f1": {
+      "extra_trees": 0.47605330975013943,
+      "random_forest": 0.4698924975915008,
+      "mlp": 0.4709038953087207,
+      "torch_mlp_cuda": 0.543485085041937
+    },
+    "weighted_f1": {
+      "extra_trees": 0.791288960657376,
+      "random_forest": 0.7773477682998385,
+      "mlp": 0.7801632557673236,
+      "torch_mlp_cuda": 0.771644358650554
+    },
+    "rare_test_support": {
+      "standing": 8,
+      "lying": 12
+    },
+    "rare_class_f1": {
+      "extra_trees_standing": 0.0,
+      "extra_trees_lying": 0.0,
+      "torch_mlp_standing": 0.2857142857142857,
+      "torch_mlp_lying": 0.1320754716981132
+    },
+    "interpretation": "These metrics reproduce v4 on the same exposed split. The animal holdout and candidate families were already inspected before v5; results are exploratory and are not independent validation, acceptance evidence, or a basis for selecting a runtime policy. The CUDA MLP's higher test macro-F1 does not override its much lower validation score."
+  },
+  "cuda_training_steps": {
+    "validation_fit_steps": {
+      "count": 630,
+      "recording": "Not emitted by the script for the temporary validation-fit model; derived as 45 epochs × ceil(13,746 / 1,024)."
+    },
+    "final_refit_steps": {
+      "count": 630,
+      "recording": "Directly recorded in evaluation.json for the final CUDA model fit on 14,231 windows over 45 epochs, batch size 1,024."
+    },
+    "total_steps": {
+      "count": 1260,
+      "recording": "One direct plus one derived fit; total is therefore partly inferred."
+    }
+  },
+  "private_artifact_sha256": {
+    "evaluation_json": "99cbf6e229ea6f28537f088c43fd3818323e445c4ad1e0e152a5f55d8dc635e3",
+    "selected_joblib": "0a3f5c66787edd09d1bf4869ff408c952f159e9fbc93b31af29fb90a38d48911",
+    "kernel_log": "e5c114df43f099b63377895455fa3b415b8fd7fca7e2206336dc8477be61e918"
+  },
+  "limitations": [
+    "The held-out animal was previously inspected; the same animal split and candidate families were used in v4, so v5 is reproducibility evidence only.",
+    "No independent farm or cohort is available in this source; no biological or population-level generalization claim is supported.",
+    "Standing and lying have very small test support, making class-specific estimates unstable.",
+    "Timestamp buckets contain whole-second values; sub-second ordering and exact sensor cadence cannot be independently verified.",
+    "This is an activity classifier from nose-ring accelerometry, not an autonomous behavioral policy, physiological model, or causal response model."
+  ],
+  "artifact_policy": "The dataset is public CC0; full evaluation, detailed reports, logs, and checkpoint remain private in Kaggle. Repository stores aggregate metrics and hashes only.",
+  "recovery_command": "kaggle kernels output pascalcoimbra/campo-vivo-cow-activity-baseline/5 -p <private-output-directory>"
+}

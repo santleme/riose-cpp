@@ -1,0 +1,119 @@
+{
+  "experiment": "Cow activity leave-one-animal-out, frozen v5 candidates",
+  "kernel": "pascalcoimbra/campo-vivo-cow-activity-loso-v6-exploratory",
+  "kaggle_kernel_version": 7,
+  "experiment_version": "v6 exploratory",
+  "visibility": "private",
+  "status": "COMPLETE",
+  "status_last_observed_at_utc": "2026-10-22 23:35:22 UTC",
+  "accelerator": {
+    "requested": "NvidiaTeslaT4",
+    "runtime_device": "cuda",
+    "cuda_required": true,
+    "cuda_available": true,
+    "gpu_name": "Tesla T4"
+  },
+  "dataset": {
+    "slug": "fandaoerji/cow-nose-ring-data-set",
+    "file": "data.csv",
+    "license": "CC0-1.0",
+    "source_csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "source_hash_verified": true,
+    "accepted_windows": 18446
+  },
+  "source": {
+    "repository_commit_before_run": "7ad0768c3c54042cc4a1095b8de7b18dc8dabe20",
+    "entry_bundle_sha256": "d8d93b321c0253d4043ed0907c02e442129b98b47d07f5976aba49a618a0722f",
+    "base_v5_train_script_sha256": "16b021f87e1f5e08be73fa0a49cffabd25be3b3e1efe0d732a6c1e1fb8cd41e0",
+    "protocol_script_sha256": "f2e14305dbc7e5bdd6771d8bd3ad0a288d15107ebf5a1657ce31535d2bc1a166",
+    "submitted_kernel_metadata_sha256": "867661dda4b13b406f0147cfacdd7aa3aab9c34f89777be1c4366dd644183e49",
+    "output_json_sha256": "4d382ac2d34b6dc0d89145c5a72d45eea669327ee05bf39211b72e2b7a28cbe3",
+    "kernel_log_sha256": "06cda235b8180454d2f2ee629f2688e300fbe446a54795d833e271346a81d75e"
+  },
+  "protocol": {
+    "outer_folds": 7,
+    "split": "one complete animal held out per outer fold; windows from each animal are never split across train/test",
+    "model_selection": "none within outer folds; fixed v5 ExtraTrees and CUDA MLP configurations are both evaluated in every fold",
+    "seed": 23,
+    "evaluation_status": "exploratory_post_selection_no_acceptance_claim",
+    "first_attempt_error_manifest": "cow-ring-kaggle-loso-v6-attempt1-error.json"
+  },
+  "frozen_candidates": {
+    "extra_trees_v5_frozen": {
+      "n_estimators": 300,
+      "max_depth": null,
+      "class_weight": "balanced",
+      "max_features": 0.8,
+      "min_samples_leaf": 2
+    },
+    "torch_mlp_cuda_v5_frozen": {
+      "hidden_sizes": [96, 48],
+      "epochs": 45,
+      "batch_size": 1024,
+      "optimizer": "AdamW",
+      "learning_rate": 0.001,
+      "weight_decay": 0.001
+    }
+  },
+  "aggregate_metrics": {
+    "extra_trees_v5_frozen": {
+      "macro_f1_mean_across_animals": 0.48988680518228256,
+      "macro_f1_sd_across_animals": 0.06900622453227212,
+      "outer_fold_macro_f1": [
+        0.3787790833398179,
+        0.5186533563322525,
+        0.46989820063169496,
+        0.5083391430077244,
+        0.6083612415397337,
+        0.47605330975013943,
+        0.46912330167461497
+      ],
+      "per_class_f1_mean_and_sd": {
+        "feeding": [0.8016944213885362, 0.082821539210776],
+        "rumination": [0.6824211883018476, 0.2698127920637706],
+        "standing": [0.14285714285714285, 0.37796447300922725],
+        "lying": [0.0, 0.0],
+        "walking": [0.822461273363886, 0.06255183047855922]
+      }
+    },
+    "torch_mlp_cuda_v5_frozen": {
+      "macro_f1_mean_across_animals": 0.4708487546165531,
+      "macro_f1_sd_across_animals": 0.0583284418011545,
+      "outer_fold_macro_f1": [
+        0.3581030696270559,
+        0.4869934157989889,
+        0.44116311584232193,
+        0.48277970684066646,
+        0.5033516522641187,
+        0.543485085041937,
+        0.48006523690078307
+      ],
+      "per_class_f1_mean_and_sd": {
+        "feeding": [0.7956355782360831, 0.10185131634939747],
+        "rumination": [0.7587470781419191, 0.23114884473496133],
+        "standing": [0.06034157945349537, 0.10662399436728676],
+        "lying": [0.029467570124633403, 0.048552074733024204],
+        "walking": [0.7100519671266348, 0.06740520514192139]
+      }
+    }
+  },
+  "class_support_across_test_folds": {
+    "feeding": {"windows": 5594, "folds_with_support": 7, "folds_without_support": 0},
+    "rumination": {"windows": 4157, "folds_with_support": 7, "folds_without_support": 0},
+    "standing": {"windows": 18, "folds_with_support": 5, "folds_without_support": 2},
+    "lying": {"windows": 37, "folds_with_support": 6, "folds_without_support": 1},
+    "walking": {"windows": 8640, "folds_with_support": 7, "folds_without_support": 0}
+  },
+  "training_coverage": {
+    "folds_with_any_label_absent_from_training": 0,
+    "note": "All five labels occurred in the six-animal training subset of every fold, although standing/lying test support was absent in some folds and very sparse overall."
+  },
+  "cuda_optimizer_steps": {
+    "direct_per_fold": [810, 675, 720, 720, 720, 630, 720],
+    "total_direct": 4995,
+    "epochs_per_fold": 45,
+    "recording": "Per-fold counts recorded by the shared v5 CUDA MLP training helper."
+  },
+  "interpretation": "The seven-animal mean estimates variation only within this one dataset/cohort. ET and CUDA MLP means are descriptive; neither is selected or accepted by these outer folds. The prior model families and original grouped holdouts were inspected, so this is post-selection/exploratory rather than independent confirmation.",
+  "artifact_policy": "Per-animal IDs, full reports and raw Kaggle output JSON/log remain private in Kaggle. Repository includes aggregate scores and hashes only; no weights or dataset rows are stored."
+}

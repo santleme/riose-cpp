@@ -11,16 +11,23 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 
 import numpy as np
 from sklearn.ensemble import ExtraTreesRegressor
 
-from train_gap_model import (
-    SEED, baseline_predictions, build_samples, evaluate, make_splits, matrices,
-    read_source, resolve_data, sha256, split_rows,
-)
+try:  # Support package imports for audits and direct script execution on Kaggle.
+    from .gap_metrics import evaluate
+    from .train_gap_model import (
+        SEED, baseline_predictions, build_samples, make_splits, matrices,
+        read_source, resolve_data, sha256, split_rows,
+    )
+except ImportError:  # pragma: no cover - exercised by the Kaggle script entrypoint
+    from gap_metrics import evaluate
+    from train_gap_model import (
+        SEED, baseline_predictions, build_samples, make_splits, matrices,
+        read_source, resolve_data, sha256, split_rows,
+    )
 
 GRID = [
     {"n_estimators": 80, "max_features": feature_fraction, "min_samples_leaf": leaf,
@@ -38,7 +45,7 @@ def fit(x: np.ndarray, y: np.ndarray, params: dict, seed: int) -> ExtraTreesRegr
 
 
 def predict(model: ExtraTreesRegressor, x: np.ndarray) -> np.ndarray:
-    return np.expm1(np.clip(model.predict(x), 0.0, math.log1p(24.0)))
+    return np.expm1(model.predict(x))
 
 
 def score_rows(model, x, y, rows):
@@ -137,6 +144,7 @@ def main():
         "protocol": {
             "target": "next event IN minus current event OUT, in hours; negative overlaps excluded; zero retained; terminal events right-censored",
             "feature_boundary": "same past-only event features as the MLP; no animal/equipment IDs or future data",
+            "target_and_prediction_limits": "targets are not clipped; predictions from all models and baselines are clipped to [0, 24] hours only during scoring, with count/fraction recorded per metric set",
             "animal_split_ids": animal_ids,
             "chronological_split_dates": time_dates,
             "chronological_cross_partition_targets_purged": purged,

@@ -15,8 +15,24 @@
     "rows": 1252536,
     "kaggle_card_rows": 1252522,
     "row_count_difference": 14,
-    "columns": ["date", "time", "cow_num", "acc_x", "acc_y", "acc_z", "behavior"],
-    "animal_ids": ["1", "2", "3", "4", "5", "6", "7"],
+    "columns": [
+      "date",
+      "time",
+      "cow_num",
+      "acc_x",
+      "acc_y",
+      "acc_z",
+      "behavior"
+    ],
+    "animal_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
     "animal_count": 7,
     "date_count": 11,
     "behavior_counts": {
@@ -58,7 +74,67 @@
       "6": 4215,
       "7": 2750
     },
-    "model_metrics": null,
-    "note": "Data preprocessing audit only. The 2026-10-22 Kaggle v3 run used the prior invalid subsecond timestamp assumption and failed before producing model metrics. A corrected Kaggle run has not yet been completed."
+    "model_metrics": {
+      "run_manifest": "cow-ring-kaggle-v5-manifest.json",
+      "status": "v5 COMPLETE on Tesla T4; data hash verified; descriptive exploratory result",
+      "validation_selected_model": "extra_trees",
+      "validation_macro_f1": {
+        "extra_trees": 0.6931093067820383,
+        "random_forest": 0.60178803115936,
+        "mlp": 0.6608756576710864,
+        "torch_mlp_cuda": 0.36208637853315234
+      },
+      "test_macro_f1": {
+        "extra_trees": 0.47605330975013943,
+        "random_forest": 0.4698924975915008,
+        "mlp": 0.4709038953087207,
+        "torch_mlp_cuda": 0.543485085041937
+      },
+      "test_weighted_f1": {
+        "extra_trees": 0.791288960657376,
+        "random_forest": 0.7773477682998385,
+        "mlp": 0.7801632557673236,
+        "torch_mlp_cuda": 0.771644358650554
+      },
+      "cuda_runtime": {
+        "cuda_available": true,
+        "gpu_name": "Tesla T4"
+      },
+      "source_hash_pinned_in_v4_output": false,
+      "source_hash_pinned_in_v5_output": true,
+      "source_csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+      "v5_optimizer_steps": {
+        "direct_final_cuda_fit": 630,
+        "validation_cuda_fit_inferred": 630,
+        "total_direct_plus_inferred": 1260
+      },
+      "exploratory_only": true
+    },
+    "note": "Preprocessing audit locally extracted 18,446 windows, and Kaggle v4/v5 reproduced these aggregate parser diagnostics and completed training. V5 verified the pinned source hash, required CUDA, confirmed Tesla T4, and logged 630 optimizer updates for the final fit (the validation-fit count is inferred). Holdout/candidate comparisons are exploratory because animals and model families were previously inspected. See the v5 run manifest for aggregate metrics and output hashes."
+  },
+  "leave_one_animal_out_v6": {
+    "run_manifest": "cow-ring-kaggle-loso-v6-manifest.json",
+    "kernel_slug": "pascalcoimbra/campo-vivo-cow-activity-loso-v6-exploratory",
+    "kaggle_kernel_version": 7,
+    "status": "COMPLETE on Tesla T4; exploratory post-selection",
+    "source_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "source_hash_verified": true,
+    "outer_folds": 7,
+    "macro_f1_mean_sd_by_animal": {
+      "extra_trees_v5_frozen": [0.48988680518228256, 0.06900622453227212],
+      "torch_mlp_cuda_v5_frozen": [0.4708487546165531, 0.0583284418011545]
+    },
+    "class_support": {
+      "feeding": {"windows": 5594, "folds_with_support": 7},
+      "rumination": {"windows": 4157, "folds_with_support": 7},
+      "standing": {"windows": 18, "folds_with_support": 5},
+      "lying": {"windows": 37, "folds_with_support": 6},
+      "walking": {"windows": 8640, "folds_with_support": 7}
+    },
+    "training_labels_absent_by_fold": 0,
+    "cuda_optimizer_steps_total": 4995,
+    "output_sha256": "4d382ac2d34b6dc0d89145c5a72d45eea669327ee05bf39211b72e2b7a28cbe3",
+    "kernel_log_sha256": "06cda235b8180454d2f2ee629f2688e300fbe446a54795d833e271346a81d75e",
+    "exploratory_only": true
   }
 }

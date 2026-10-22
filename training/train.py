@@ -260,7 +260,12 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=23)
     args = parser.parse_args()
 
-    if args.require_cuda and not _cuda_available():
+    # Script kernels do not expose a reliable user-argument channel through
+    # Kaggle's metadata. Treat an attached Kaggle dataset as a GPU run and fail
+    # before data parsing unless CUDA is actually available.
+    kaggle_input_attached = Path("/kaggle/input").is_dir()
+    cuda_required = args.require_cuda or (kaggle_input_attached and not args.smoke_synthetic)
+    if cuda_required and not _cuda_available():
         raise RuntimeError("CUDA was required but PyTorch cannot access a CUDA device")
 
     if args.smoke_synthetic:
@@ -365,7 +370,7 @@ def main() -> None:
         "model_selection_animal": str(args.validation_animal),
         "model_artifact": "activity_classifier.pt" if best_name == "torch_mlp_cuda" else "activity_classifier.joblib",
         "evaluation_note": "Single-animal group holdout pilot; windows require timestamp-contiguous 10 Hz samples. Historical Kaggle metrics predate this continuity fix and require a rerun. Use leave-one-animal-out cross-validation before biological/generalization claims.",
-        "runtime": {"cuda_available": bool(_cuda_available()), "device": "cuda" if _cuda_available() else "cpu",
+        "runtime": {"cuda_required": bool(cuda_required), "cuda_available": bool(_cuda_available()), "device": "cuda" if _cuda_available() else "cpu",
                     "gpu_name": _gpu_name()},
     }
     (args.output_dir / "evaluation.json").write_text(json.dumps(metadata, indent=2) + "\n")
