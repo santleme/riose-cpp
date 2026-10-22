@@ -11,6 +11,7 @@ on:
       - 'training/data/**'
       - 'training/growth/**'
       - 'training/visits/**'
+      - 'training/experiments/**'
       - 'training/train.py'
       - 'training/test_*.py'
       - 'training/requirements.txt'
@@ -26,6 +27,7 @@ on:
       - 'training/data/**'
       - 'training/growth/**'
       - 'training/visits/**'
+      - 'training/experiments/**'
       - 'training/train.py'
       - 'training/test_*.py'
       - 'training/requirements.txt'
@@ -59,5 +61,7 @@ jobs:
       - run: python -m unittest training.test_train_windows -v
       - run: python -m json.tool training/data/datasets.json > /dev/null
       - run: python -m json.tool training/data/reports/nellore-shade-access-2026-10.json > /dev/null
+      - run: python -m json.tool training/experiments/cow-nose-ring-data-audit.json > /dev/null
+      - run: python -m json.tool training/experiments/cow-ring-kaggle-v3-status.json > /dev/null
       - run: python -m py_compile training/train.py training/growth/train_growth.py training/visits/train_gap_model.py training/visits/train_gap_extratrees.py
       - run: python -m json.tool training/visits/runs/experiment-manifest.json > /dev/null

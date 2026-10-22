@@ -43,10 +43,27 @@ class ExtractWindowsContinuityTests(unittest.TestCase):
         self.assertEqual(len(x), 2)  # Three windows would bridge across the 0.3 s gap.
         self.assertEqual(diag["sampling_gap_breaks"], 1)
 
-    def test_duplicate_timestamp_starts_new_run(self):
+    def test_duplicate_sample_in_coarse_timestamp_block_is_ambiguous(self):
         x, _, _, diag = _extract_windows(rows([0.0, 0.1, 0.1, 0.2, 0.3]), window_samples=2)
-        self.assertEqual(len(x), 2)
-        self.assertEqual(diag["duplicate_timestamp_breaks"], 1)
+        self.assertEqual(len(x), 1)
+        self.assertEqual(diag["ambiguous_timestamp_blocks"], 1)
+
+    def test_whole_second_timestamps_with_twenty_samples_per_two_seconds(self):
+        times = [0.0] * 20 + [2.0] * 20 + [4.0] * 20
+        x, y, _, diag = _extract_windows(rows(times), window_samples=50)
+        self.assertEqual(x.shape, (1, 18))
+        self.assertEqual(y.tolist(), [0])
+        self.assertEqual(diag["timestamp_blocks"], 3)
+        self.assertEqual(diag["coarse_timestamp_rows"], 60)
+        self.assertEqual(diag["ambiguous_timestamp_blocks"], 0)
+        self.assertEqual(diag["sampling_gap_breaks"], 0)
+
+    def test_incomplete_coarse_timestamp_block_is_not_joined(self):
+        times = [0.0] * 20 + [2.0] * 19 + [4.0] * 20 + [6.0] * 20
+        x, _, _, diag = _extract_windows(rows(times), window_samples=25)
+        self.assertEqual(len(x), 1)
+        self.assertEqual(diag["ambiguous_timestamp_blocks"], 1)
+        self.assertEqual(diag["sampling_gap_breaks"], 1)
 
     def test_missing_sensor_row_is_dropped_and_gap_is_not_bridged(self):
         frame = rows([0.0, 0.1, 0.2, 0.3, 0.4, 0.5], missing_sensor_at={2})

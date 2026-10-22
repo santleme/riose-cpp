@@ -31,10 +31,6 @@ AXES = ["acc_x", "acc_y", "acc_z"]
 REQUIRED = {"date", "time", "cow_num", *AXES, "behavior"}
 WINDOW_SAMPLES = 50  # 5 s at the dataset's 10 Hz sample rate
 SAMPLING_HZ = 10
-SAMPLE_INTERVAL_SECONDS = 1.0 / SAMPLING_HZ
-# Allow modest timestamp quantization/jitter while ensuring a missing 10 Hz
-# sample (0.2 s between retained rows) always breaks a window.
-SAMPLE_INTERVAL_TOLERANCE_SECONDS = 0.025
 FEATURE_NAMES = [
     *(f"{axis}_{stat}" for axis in AXES for stat in ("mean", "std", "min", "max")),
     "mag_mean", "mag_std", "mag_min", "mag_max", "mag_rms", "signal_magnitude_area",
@@ -120,14 +116,16 @@ def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
         "invalid_timestamp_rows": int((~timestamp_valid).sum()),
         "missing_sensor_or_label_rows": int((timestamp_valid & ~data_valid).sum()),
         "reordered_rows": 0,
-        "duplicate_timestamp_breaks": 0,
+        "timestamp_blocks": 0,
+        "coarse_timestamp_rows": 0,
+        "ambiguous_timestamp_blocks": 0,
         "sampling_gap_breaks": 0,
         "contiguous_runs": 0,
         "candidate_windows": 0,
         "discarded_mixed_label_windows": 0,
         "accepted_windows": 0,
-        "sampling_hz": SAMPLING_HZ,
-        "sample_interval_tolerance_seconds": SAMPLE_INTERVAL_TOLERANCE_SECONDS,
+        "sampling_hz_assumed_from_dataset_card": SAMPLING_HZ,
+        "timestamp_resolution_note": "The Kaggle CSV stores whole-second clock values repeated across multiple sensor rows; within-second sample order is inferred from CSV order and the documented sampling rate.",
     }
     frame = frame.loc[timestamp_valid & data_valid].copy()
     frame["behavior"] = frame["behavior"].astype(int)
@@ -141,24 +139,46 @@ def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
         ordered = group.sort_values(["_timestamp", "_source_order"], kind="stable").reset_index(drop=True)
         diagnostics["reordered_rows"] += int(np.count_nonzero(original_order != ordered["_source_order"].to_numpy()))
         timestamps = ordered["_timestamp"].astype("int64").to_numpy()
-        # Split on duplicates and on intervals outside the timestamp precision
-        # tolerance around the documented 100 ms sample interval. This also
-        # prevents a dropped NaN sensor row from being bridged after dropna.
-        deltas = np.diff(timestamps) / 1_000_000_000
-        boundaries = [0]
-        for index, delta in enumerate(deltas, start=1):
-            if delta <= 0:
-                diagnostics["duplicate_timestamp_breaks"] += 1
-                boundaries.append(index)
-            elif abs(delta - SAMPLE_INTERVAL_SECONDS) > SAMPLE_INTERVAL_TOLERANCE_SECONDS:
-                diagnostics["sampling_gap_breaks"] += 1
-                boundaries.append(index)
-        boundaries.append(len(ordered))
-        for run_start, run_end in zip(boundaries, boundaries[1:]):
-            if run_start == run_end:
+        # The actual Kaggle CSV stores whole-second timestamps repeated across
+        # sensor rows (usually 20 rows per timestamp, then +2 seconds). These
+        # are coarse timestamp buckets, not duplicate samples. Infer a block's
+        # expected row count from elapsed seconds * documented 10 Hz. Exclude
+        # blocks whose count disagrees, so missing/extra rows cannot be bridged.
+        changes = np.flatnonzero(np.diff(timestamps) != 0) + 1
+        block_starts = np.concatenate(([0], changes))
+        block_ends = np.concatenate((changes, [len(ordered)]))
+        block_times = timestamps[block_starts]
+        block_counts = block_ends - block_starts
+        diagnostics["timestamp_blocks"] += int(len(block_starts))
+        diagnostics["coarse_timestamp_rows"] += int(np.sum(block_counts[block_counts > 1]))
+        if len(block_starts) == 1:
+            diagnostics["ambiguous_timestamp_blocks"] += 1
+            continue
+
+        elapsed_seconds = np.diff(block_times) / 1_000_000_000
+        expected_counts = np.rint(elapsed_seconds * SAMPLING_HZ).astype(np.int64)
+        valid_blocks = np.zeros(len(block_counts), dtype=bool)
+        valid_blocks[:-1] = (elapsed_seconds > 0) & (block_counts[:-1] == expected_counts)
+        # The final block has no following timestamp; use the previous observed
+        # interval as its expected duration. This is an assumption made explicit
+        # by the coarse timestamp resolution and the dataset's 10 Hz metadata.
+        valid_blocks[-1] = elapsed_seconds[-1] > 0 and block_counts[-1] == expected_counts[-1]
+        diagnostics["ambiguous_timestamp_blocks"] += int((~valid_blocks).sum())
+        diagnostics["sampling_gap_breaks"] += int(np.count_nonzero((elapsed_seconds > 0) & (~valid_blocks[:-1])))
+
+        block_index = 0
+        while block_index < len(block_starts):
+            if not valid_blocks[block_index]:
+                block_index += 1
                 continue
+            run_start = block_index
+            block_index += 1
+            while block_index < len(block_starts) and valid_blocks[block_index]:
+                block_index += 1
+            run_start_row = int(block_starts[run_start])
+            run_end_row = int(block_ends[block_index - 1])
             diagnostics["contiguous_runs"] += 1
-            run = ordered.iloc[run_start:run_end]
+            run = ordered.iloc[run_start_row:run_end_row]
             acc = run[AXES].to_numpy(dtype=np.float32)
             y = run["behavior"].to_numpy(dtype=np.int64)
             full_windows = len(y) // window_samples
