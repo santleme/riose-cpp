@@ -4,6 +4,10 @@ Pequena fazenda bovina em pixel art 2.5D, executada diretamente no navegador. A 
 
 > **Estado científico:** a simulação atual é um protótipo experimental, não um modelo zootécnico validado. Os parâmetros de fome, sede, ingestão, termorregulação, pastagem e decisão são aproximações do jogo. Os sprites e o cenário são ilustrações geradas para este protótipo; não constituem referência anatômica validada.
 
+![Prévia da fazenda em desktop](docs/images/farm-desktop.png)
+
+[Ver prévia mobile](docs/images/farm-mobile.png)
+
 ## Executar
 
 ```sh

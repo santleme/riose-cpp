@@ -8,3 +8,4 @@ training/__pycache__/
 training/outputs/*
 training/policy/outputs/*
 training/kaggle-output/
+artifacts/
