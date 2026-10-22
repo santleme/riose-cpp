@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "datasets": [
+    {
+      "id": "nellore-trough-events-2021",
+      "priority": "behavior-and-resource-access",
+      "title": "Data from visits to the trough of Nellore cattle",
+      "source": "Kaggle",
+      "source_ref": "juliavalente/data-from-visits-to-the-trough-of-nellore-cattle",
+      "source_url": "https://www.kaggle.com/datasets/juliavalente/data-from-visits-to-the-trough-of-nellore-cattle",
+      "download_url": "https://www.kaggle.com/api/v1/datasets/download/juliavalente/data-from-visits-to-the-trough-of-nellore-cattle",
+      "version": 2,
+      "published_at": "2022-03-30",
+      "license": "CC-BY-NC-SA-4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "commercial_use": false,
+      "primary_publication": {
+        "title": "socialh: An R package for determining the social hierarchy of animals using data from individual electronic bins",
+        "doi": "10.1371/journal.pone.0271337",
+        "url": "https://doi.org/10.1371/journal.pone.0271337"
+      },
+      "study": {
+        "population": "Nellore males in a feed-efficiency trial",
+        "animals_reported_in_paper": 37,
+        "events_reported_in_paper": 90211,
+        "duration_days_reported_in_paper": 21,
+        "pens_reported_in_paper": 1,
+        "equipment_reported_in_paper": 5,
+        "diet": "Total mixed ration; fed at 08:00 and 15:00",
+        "measurement": "GrowSafe electronic feeder identification and entry/exit times"
+      },
+      "raw_files": [
+        {
+          "name": "visits_to_the_trough .csv",
+          "format": "whitespace-delimited quoted text despite .csv extension",
+          "expected_columns": ["animal_id", "equip_id", "IN", "OUT"],
+          "rows_reported_by_audit": 90211,
+          "sha256_archive_observed_2026-10-22": "fd2cfd016503dcff40be2931a6bd04a7185d020c811f6cafa08ec3925d9b5884",
+          "archived_bytes_observed": 890166
+        }
+      ],
+      "label_scope": "Electronic feed-bin visits. The public Kaggle file has no measured intake, behavior ethogram, water visits, GPS, or pasture position.",
+      "derived_fields_allowed": ["duration_s = OUT - IN", "calendar_date from IN", "same_equipment_gap_s between adjacent visits"],
+      "excluded_fields": ["consumption_g", "pen", "behavior_label"],
+      "provenance_notes": [
+        "The article reports that its underlying electronic-bin data included duration and feed consumption; these fields are absent from this Kaggle archive. Do not attach the socialh R-package enriched table to this CSV without proving row-level lineage.",
+        "The article reports 37 animals; the inspected Kaggle version contains 38 distinct animal IDs, including one ID with a single event. Treat this as an unresolved coverage discrepancy, not an automatically valid animal cohort.",
+        "The paper used a 0-10 second replacement threshold illustratively and explicitly recommends determining a breed/category-specific interval. It is not a ground-truth social label."
+      ],
+      "local_paths": {
+        "archive": "data/raw/kaggle/nellore-trough-v2.zip",
+        "normalized_events": "data/processed/nellore-trough-events.csv",
+        "audit_report": "data/reports/nellore-trough-audit.json",
+        "split_index": "data/processed/nellore-trough-splits.csv"
+      }
+    },
+    {
+      "id": "nelore-ufms-supplementation-2022-2023",
+      "priority": "growth-nutrition-environment",
+      "title": "A Dataset on Nelore Cattle Supplementation in the Midwest Region of Brazil for Integrated Analysis of Supplementation, Satellite Remote Sensing, and Weather Variables",
+      "source": "Mendeley Data",
+      "doi": "10.17632/3wdjvxmvsp.7",
+      "source_url": "https://data.mendeley.com/datasets/3wdjvxmvsp/7",
+      "version": 7,
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "primary_publication": {
+        "title": "A dataset on Nelore Cattle supplementation in the midwest region of Brazil for integrated analysis of supplementation, satellite remote sensing, and weather variables",
+        "doi": "10.1016/j.dib.2024.110520",
+        "url": "https://doi.org/10.1016/j.dib.2024.110520"
+      },
+      "access": "Public landing page and CC BY 4.0 metadata observed; files not copied into this repository.",
+      "study": {
+        "animals": 26,
+        "animal_type": "male Nelore, approximately 20 months at start",
+        "period": "2022-12 through 2023-10",
+        "site": "one 16 ha Brachiaria decumbens paddock, UFMS school farm",
+        "measurement_interval_days": "13-28"
+      },
+      "published_files": ["Complete_Dataset.csv", "Table_1_Supplementation_Data.csv", "Table_2_Field_Multispectral_Data.csv", "Table_3_Weather_Data.csv", "get_image_data.ipynb", "collect_weather_data.ipynb"],
+      "known_columns": {
+        "Table_1_Supplementation_Data.csv": ["START_DATE", "FINAL_DATE", "PERIOD", "AMOUNT_DAYS", "ANIMAL", "START_WEIGHT", "FINAL_WEIGHT", "ADG", "ADS", "SUP_TIME", "SUP_TOTAL", "TOTAL_TIME", "TOTAL_ATTENDANCE", "TOTAL_DAYS", "time-of-day attendance and time aggregates", "seasonal attendance and time aggregates"],
+        "Complete_Dataset.csv": ["Table_1 animal, interval, weight, supplement and feeder variables", "Sentinel-2 bands and vegetation indices", "period-aggregated weather variables"]
+      },
+      "limitations": ["26 animals in a single paddock and season; observational cohort, not a randomized supplement contrast", "vegetation indices are not forage mass or forage chemistry; paper explicitly notes this proxy limitation", "published rows aggregate 13-28 day intervals; avoid treating copied weather/vegetation period values as independent animal measurements"]
+    },
+    {
+      "id": "nelore-shade-water-2025",
+      "priority": "thermal-environment-water-intake",
+      "title": "Data on: Shade provision and its influence on water consumption and drinking behaviour of Nellore cattle in feedlot in a tropical environment",
+      "source": "Mendeley Data",
+      "doi": "10.17632/cctgpznjrc.1",
+      "source_url": "https://data.mendeley.com/datasets/cctgpznjrc/1",
+      "version": 1,
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "primary_publication": {
+        "title": "Shade provision and its influence on water intake and drinking behaviour of Nellore cattle in feedlot in a tropical environment",
+        "doi": "10.1371/journal.pone.0331238",
+        "url": "https://doi.org/10.1371/journal.pone.0331238"
+      },
+      "access": "Landing page lists Download All and CC BY 4.0. DataCite metadata also carries an embargoedAccess rights URI; file-level download/access state and worksheet schemas were not verified here.",
+      "study": {
+        "animals": 47,
+        "duration_days": 83,
+        "pens": 4,
+        "treatment": "artificial shade (+S) versus no shade (-S), applied to two pens per treatment",
+        "shade_area_m2": 72,
+        "events": 19388,
+        "dmi_records": 3854,
+        "liveweight_records": 282,
+        "weather_records_per_metric": 7968
+      },
+      "published_sheets_reported": ["Drinking behaviour", "Dry matter intake", "Liveweight", "Weather"],
+      "known_variables": ["individual water intake, visit time and duration", "individual daily dry matter intake", "liveweight at six timepoints", "air temperature, relative humidity, wind speed, solar radiation, temperature-humidity index"],
+      "limitations": ["shade treatment is allocated at group/pen level, with only four pens; animal records do not constitute 47 independent treatment replicates", "treatment-level causal estimates require pen-aware analysis and careful uncertainty; avoid animal-level pseudoreplication", "one water trough was located in the sunny area of each pen", "feedlot total mixed ration is not extensive grazing"]
+    }
+  ]
+}

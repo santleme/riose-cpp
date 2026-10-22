@@ -5,8 +5,10 @@ dist/
 .firecrawl/
 training/.cache/
 training/__pycache__/
+training/**/__pycache__/
 training/outputs/*
 training/policy/outputs/*
 training/kaggle-output/
 artifacts/
 /public/engine/campo_core.wasm
+/data/
