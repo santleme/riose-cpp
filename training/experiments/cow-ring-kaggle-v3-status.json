@@ -1,0 +1,41 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "kernel_url": "https://www.kaggle.com/code/pascalcoimbra/campo-vivo-cow-activity-baseline",
+  "version": 3,
+  "visibility": "private",
+  "dataset": "fandaoerji/cow-nose-ring-data-set (attached public dataset, data.csv)",
+  "dataset_license": "CC0-1.0 (Kaggle dataset metadata)",
+  "requested_accelerator": "NvidiaTeslaT4",
+  "source_script_sha256": "56a27f89c990db086e17f6ce1056836f9ba396f83b033783397767b0d590347d",
+  "kernel_metadata_sha256": "5bc925f23ee28c78ede0a176316f587e0dd84618ea2217cb8a83300d9114674f",
+  "submission": {
+    "result": "Kernel version 3 successfully pushed",
+    "kaggle_reported_last_run_time": "2026-10-22 23:04:56.397000 (timezone unspecified by CLI)"
+  },
+  "status_observed": {
+    "time_utc": "2026-10-22 23:08:46 UTC",
+    "kernel_status": "KernelWorkerStatus.RUNNING",
+    "outputs_available": false,
+    "training_completion_confirmed": false,
+    "metrics_recorded": false
+  },
+  "experiment_scope": "Rerun the existing training/train.py timestamp-contiguous 10 Hz window extraction and unchanged model configurations; no architecture or hyperparameter changes.",
+  "timestamp_diagnostics_expected": [
+    "invalid_timestamp_rows",
+    "missing_sensor_or_label_rows",
+    "reordered_rows",
+    "duplicate_timestamp_breaks",
+    "sampling_gap_breaks",
+    "contiguous_runs",
+    "candidate_windows",
+    "discarded_mixed_label_windows",
+    "accepted_windows"
+  ],
+  "holdout_status": "Animal 1 validation and animal 6 holdout were previously inspected in version 2; version 3 results, if recovered, are exploratory and not independent or acceptance evidence.",
+  "recovery": {
+    "command": "kaggle kernels output pascalcoimbra/campo-vivo-cow-activity-baseline -p <private-output-directory>",
+    "artifacts_expected_after_completion": ["evaluation.json", "activity_classifier.pt or activity_classifier.joblib"],
+    "note": "Keep raw data, detailed outputs and model artifacts private; this status record contains no metrics or data rows."
+  },
+  "historical_record": "Version 2 results remain in training/experiments/kaggle-cuda-run.json and training/README.md as historical results predating the timestamp-continuity fix."
+}
