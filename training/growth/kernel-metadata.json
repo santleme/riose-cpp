@@ -1,0 +1,13 @@
+{
+  "id": "pascalcoimbra/campo-vivo-nelore-growth-baseline-v1",
+  "title": "Campo Vivo Nelore Growth Baseline v1",
+  "code_file": "train_growth.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "dataset_sources": ["pascalcoimbra/campo-vivo-nelore-ufms-v7"],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

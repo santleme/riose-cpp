@@ -1,0 +1,15 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-nelore-growth-baseline-v1",
+  "kernel_visibility": "private",
+  "dataset": "pascalcoimbra/campo-vivo-nelore-ufms-v7",
+  "dataset_visibility": "private",
+  "source_dataset_doi": "10.17632/3wdjvxmvsp.7",
+  "source_dataset_license": "CC BY 4.0",
+  "source_csv_sha256": "300e274f497d6a19f4f2f9df69cf6dcb0dff03aac8c59cee799bd45404769e24",
+  "requested_accelerator": "nvidiaTeslaT4",
+  "accelerator_used_by_estimators": false,
+  "kernel_status": "COMPLETE",
+  "code": "../train_growth.py; kernel version 1",
+  "outputs": ["evaluation.json", "growth_adg_model.joblib", "campo-vivo-nelore-growth-baseline-v1.log"],
+  "local_kaggle_metric_parity": "Exact within floating point tolerance (maximum MAE difference < 3e-15 kg/day)."
+}

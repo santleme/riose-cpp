@@ -1,0 +1,105 @@
+[{"stream_name":"stdout","time":8.59730279,"data":"{\n"}
+,{"stream_name":"stdout","time":8.597371388,"data":"  \"selected_model\": \"hist_gradient_boosting\",\n"}
+,{"stream_name":"stdout","time":8.597375922,"data":"  \"future_period_test\": {\n"}
+,{"stream_name":"stdout","time":8.59737851,"data":"    \"n\": 104,\n"}
+,{"stream_name":"stdout","time":8.597380821,"data":"    \"mae_kg_per_day\": 0.4547617520667577,\n"}
+,{"stream_name":"stdout","time":8.597383096,"data":"    \"rmse_kg_per_day\": 0.5687792299795235,\n"}
+,{"stream_name":"stdout","time":8.597385324,"data":"    \"r2\": -0.18128730091280199,\n"}
+,{"stream_name":"stdout","time":8.59738759,"data":"    \"bias_kg_per_day\": -0.12014527844594182,\n"}
+,{"stream_name":"stdout","time":8.597389827,"data":"    \"period_metrics\": {\n"}
+,{"stream_name":"stdout","time":8.597392009,"data":"      \"12\": {\n"}
+,{"stream_name":"stdout","time":8.597394168,"data":"        \"n\": 26,\n"}
+,{"stream_name":"stdout","time":8.597396441,"data":"        \"mae_kg_per_day\": 0.4180075592591931\n"}
+,{"stream_name":"stdout","time":8.597398675,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597400845,"data":"      \"13\": {\n"}
+,{"stream_name":"stdout","time":8.59740297,"data":"        \"n\": 26,\n"}
+,{"stream_name":"stdout","time":8.597405111,"data":"        \"mae_kg_per_day\": 0.35197531586637776\n"}
+,{"stream_name":"stdout","time":8.597407323,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597409446,"data":"      \"14\": {\n"}
+,{"stream_name":"stdout","time":8.597411551,"data":"        \"n\": 26,\n"}
+,{"stream_name":"stdout","time":8.597413665,"data":"        \"mae_kg_per_day\": 0.3170284267248926\n"}
+,{"stream_name":"stdout","time":8.597415827,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597417944,"data":"      \"15\": {\n"}
+,{"stream_name":"stdout","time":8.597420037,"data":"        \"n\": 26,\n"}
+,{"stream_name":"stdout","time":8.597422195,"data":"        \"mae_kg_per_day\": 0.7320357064165671\n"}
+,{"stream_name":"stdout","time":8.597424352,"data":"      }\n"}
+,{"stream_name":"stdout","time":8.597426446,"data":"    }\n"}
+,{"stream_name":"stdout","time":8.597428518,"data":"  },\n"}
+,{"stream_name":"stdout","time":8.597430602,"data":"  \"unseen_animal_test\": {\n"}
+,{"stream_name":"stdout","time":8.597432759,"data":"    \"n\": 75,\n"}
+,{"stream_name":"stdout","time":8.597434877,"data":"    \"mae_kg_per_day\": 0.3022724944043909,\n"}
+,{"stream_name":"stdout","time":8.597437108,"data":"    \"rmse_kg_per_day\": 0.38027020110745263,\n"}
+,{"stream_name":"stdout","time":8.597439277,"data":"    \"r2\": 0.3361657786732678,\n"}
+,{"stream_name":"stdout","time":8.597441444,"data":"    \"bias_kg_per_day\": 0.02713131354238828,\n"}
+,{"stream_name":"stdout","time":8.597443611,"data":"    \"period_metrics\": {\n"}
+,{"stream_name":"stdout","time":8.597445726,"data":"      \"1\": {\n"}
+,{"stream_name":"stdout","time":8.597447859,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597450009,"data":"        \"mae_kg_per_day\": 0.264629141994308\n"}
+,{"stream_name":"stdout","time":8.597452179,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597454214,"data":"      \"2\": {\n"}
+,{"stream_name":"stdout","time":8.597456329,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597458461,"data":"        \"mae_kg_per_day\": 0.13963096310843745\n"}
+,{"stream_name":"stdout","time":8.597460624,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597462679,"data":"      \"3\": {\n"}
+,{"stream_name":"stdout","time":8.597473345000001,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597475801,"data":"        \"mae_kg_per_day\": 0.14670613928477175\n"}
+,{"stream_name":"stdout","time":8.59747803,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597480078,"data":"      \"4\": {\n"}
+,{"stream_name":"stdout","time":8.597482167,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597484307,"data":"        \"mae_kg_per_day\": 0.2591395612523236\n"}
+,{"stream_name":"stdout","time":8.597486582,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597488627,"data":"      \"5\": {\n"}
+,{"stream_name":"stdout","time":8.597490742,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597492865,"data":"        \"mae_kg_per_day\": 0.2091925006873506\n"}
+,{"stream_name":"stdout","time":8.597495098,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597497139,"data":"      \"6\": {\n"}
+,{"stream_name":"stdout","time":8.597499229,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597501336,"data":"        \"mae_kg_per_day\": 0.21078986118007464\n"}
+,{"stream_name":"stdout","time":8.597503559,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597505606,"data":"      \"7\": {\n"}
+,{"stream_name":"stdout","time":8.597507678,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597509807,"data":"        \"mae_kg_per_day\": 0.5171556965548874\n"}
+,{"stream_name":"stdout","time":8.597512024,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597514077,"data":"      \"8\": {\n"}
+,{"stream_name":"stdout","time":8.597516156,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.59751828,"data":"        \"mae_kg_per_day\": 0.47713389455823024\n"}
+,{"stream_name":"stdout","time":8.597520444,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597522497,"data":"      \"9\": {\n"}
+,{"stream_name":"stdout","time":8.597524573,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597526704,"data":"        \"mae_kg_per_day\": 0.2140599742310101\n"}
+,{"stream_name":"stdout","time":8.597528864000001,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597530917,"data":"      \"10\": {\n"}
+,{"stream_name":"stdout","time":8.597533002,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597535154,"data":"        \"mae_kg_per_day\": 0.266465435591055\n"}
+,{"stream_name":"stdout","time":8.597537324,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597539392,"data":"      \"11\": {\n"}
+,{"stream_name":"stdout","time":8.597541491,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597543624,"data":"        \"mae_kg_per_day\": 0.40725606954760424\n"}
+,{"stream_name":"stdout","time":8.597545793,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597547862,"data":"      \"12\": {\n"}
+,{"stream_name":"stdout","time":8.597549939,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597552057,"data":"        \"mae_kg_per_day\": 0.3617371596903305\n"}
+,{"stream_name":"stdout","time":8.597554206,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597556251,"data":"      \"13\": {\n"}
+,{"stream_name":"stdout","time":8.597558342,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597560468,"data":"        \"mae_kg_per_day\": 0.48616222138857584\n"}
+,{"stream_name":"stdout","time":8.59756262,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597564667,"data":"      \"14\": {\n"}
+,{"stream_name":"stdout","time":8.597566755999999,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597570837,"data":"        \"mae_kg_per_day\": 0.3671158751157699\n"}
+,{"stream_name":"stdout","time":8.597573114,"data":"      },\n"}
+,{"stream_name":"stdout","time":8.597575232,"data":"      \"15\": {\n"}
+,{"stream_name":"stdout","time":8.597578486,"data":"        \"n\": 5,\n"}
+,{"stream_name":"stdout","time":8.597580682,"data":"        \"mae_kg_per_day\": 0.20691292188113425\n"}
+,{"stream_name":"stdout","time":8.597582845,"data":"      }\n"}
+,{"stream_name":"stdout","time":8.597584879,"data":"    }\n"}
+,{"stream_name":"stdout","time":8.597586978,"data":"  },\n"}
+,{"stream_name":"stdout","time":8.597589094,"data":"  \"output_dir\": \"training/growth/runs/nelore-v7\"\n"}
+,{"stream_name":"stdout","time":8.597591426,"data":"}\n"}
+,{"stream_name":"stderr","time":11.069282312,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":11.069315972,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":11.402271344,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":11.402313369,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":13.349875596,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":14.49187925,"data":"[NbConvertApp] Writing 353132 bytes to __results__.html\n"}
+]
