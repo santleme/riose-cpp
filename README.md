@@ -1,8 +1,8 @@
 # Campo Vivo
 
-Simulador experimental de uma pequena fazenda de bovinos, executado no navegador. O projeto começa com uma cena 2.5D em pixel art e um ecossistema simples no qual ações de manejo alteram recursos e necessidades dos animais.
+Pequena fazenda bovina em pixel art 2.5D, executada diretamente no navegador. A tela inteira é o mundo: sem painéis de gestão ou dashboards. Bovinos individuais percorrem o pasto e reagem a fome, sede, calor, sombra, descanso, água e forragem.
 
-> **Estado científico:** a versão atual é um protótipo de interação, não um modelo zootécnico validado. Taxas de fome, sede, pastejo, umidade e conforto são aproximações heurísticas. A interface explicita esse status; valores do protótipo não devem orientar decisões reais de manejo.
+> **Estado científico:** a simulação atual é um protótipo experimental, não um modelo zootécnico validado. Os parâmetros de fome, sede, ingestão, termorregulação, pastagem e decisão são aproximações do jogo. Os sprites e o cenário são ilustrações geradas para este protótipo; não constituem referência anatômica validada.
 
 ## Executar
 
@@ -11,32 +11,25 @@ npm install
 npm run dev
 ```
 
-Para gerar a versão estática:
+`npm run build` gera a versão estática em `dist/`.
 
-```sh
-npm run build
-```
+## Explorar
 
-## O que está implementado
+- Arraste o mouse ou toque para deslocar a câmera.
+- Use a roda do mouse ou `+` / `-` para aproximar e afastar.
+- Use `W A S D` ou as setas para navegar; `0` restaura a câmera.
+- Clique em um bovino para acompanhá-lo.
 
-- Mapa isométrico desenhado em canvas, com piquete, cercas, curral, açude, cocho, árvores e bovinos.
-- Bovinos com identidade, raça ilustrativa, idade, fome, sede, estresse, saúde, ruminação, movimento e estado atual.
-- Pastagem distribuída em canteiros com biomassa e umidade próprias; o pastejo consome biomassa local e o clima afeta água, solo e crescimento.
-- Ações de ração, irrigação, rotação, clima, lotação, seleção e deslocamento de animais, pausa e velocidade.
-- Observação contextual para expor consequências na própria interface.
+## Estrutura
 
-## Arquitetura inicial
+- `src/world.ts`: canvas em tela cheia, projeção 2.5D, sprites, cenário, animações e câmera.
+- `src/simulation.ts`: estado ecológico e agentes bovinos individuais, independente do DOM.
+- `src/behavior-policy.ts`: política interpretável de escolha de atividade, mantida como baseline até que uma alternativa aprendida passe validação.
+- `public/assets/`: atlas de bovinos e ilustração de cenário.
+- `docs/research/`: pesquisa de evidências, projetos, artigos, dados e limites de validade.
 
-`src/simulation.ts` contém estado e atualização da simulação sem dependência do DOM. `src/world.ts` projeta o estado em canvas e recebe interação espacial. `src/main.ts` monta a interface e conecta comandos à simulação. Essa fronteira permite substituir gradualmente as regras heurísticas por processos calibrados ou componentes aprendidos sem atrelar a biologia ao renderizador.
+## Modelos e evidência
 
-## Próximos passos
+Os datasets públicos encontrados ensinam principalmente a **reconhecer atividade observada** (como pastejo ou ruminação). Um classificador desse tipo não descobre sozinho a intenção do animal nem o efeito causal de mudar água, sombra ou pastagem. A política de atividade do jogo permanece explícita e experimental; resultados de classificadores serão documentados separadamente e não tratados como fisiologia. Para avaliar decisões aprendidas, precisamos de trajetórias individuais sincronizadas com estado ambiental e resultados de intervenções.
 
-1. Construir a matriz de evidência e inventário de datasets em [`docs/research/landscape.md`](docs/research/landscape.md).
-2. Definir unidades, escalas de tempo, balanços de massa e proveniência por variável antes de calibrar.
-3. Criar cenários reproduzíveis e dados sintéticos com rótulos de origem; reservar dados reais para validação externa.
-4. Implementar modelos de forrageamento, ingestão e conforto térmico com equações/limites documentados.
-5. Avaliar modelos aprendidos em GPU Kaggle apenas para componentes com dados e métricas adequados; comparar sempre com uma linha de base mecanística.
-
-## Fontes e evidência
-
-O levantamento técnico e científico em [`docs/research/landscape.md`](docs/research/landscape.md) registra fontes, licenças e limitações dos dados. Até que essa avaliação esteja concluída, os comportamentos do protótipo são explicitamente aproximações.
+Consulte [`docs/research/behavior-models.md`](docs/research/behavior-models.md), [`docs/research/data-and-models.md`](docs/research/data-and-models.md) e [`docs/research/landscape.md`](docs/research/landscape.md) para fontes, licenças, limitações e protocolo de avaliação.

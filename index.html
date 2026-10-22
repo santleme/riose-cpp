@@ -2,13 +2,15 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#111c16" />
-    <meta name="description" content="Campo Vivo — uma fazenda experimental onde cada escolha muda o ecossistema." />
-    <title>Campo Vivo — Fazenda Experimental</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#1b2d20" />
+    <meta name="description" content="Campo Vivo — uma fazenda viva em pixel art 2.5D." />
+    <title>Campo Vivo</title>
   </head>
   <body>
-    <div id="app"></div>
+    <main id="app" aria-label="Campo Vivo, fazenda interativa em pixel art">
+      <canvas id="farm-canvas" aria-label="Fazenda em pixel art. Arraste para mover a câmera, use a roda para aproximar e afaste. Use WASD ou setas para navegar."></canvas>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
