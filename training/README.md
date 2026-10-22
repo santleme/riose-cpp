@@ -22,6 +22,8 @@ Kernel version 4 completed on a Tesla T4 using the corrected coarse-timestamp pa
 
 V4 confirms CUDA and `Tesla T4` in its evaluation metadata. It predates explicit optimizer-step instrumentation: from the fixed 45-epoch, batch-1024 loop and training row counts, 630 optimizer steps are inferred for validation fitting and 630 for the refit, 1,260 total; this count was not directly logged. The pinned v5 script adds direct step and dataset-hash reporting. Kaggle execution must also enforce the `--require-cuda` guard before data loading; do not treat a GPU request alone as proof that CUDA was available.
 
+Kernel version 5 completed on a Tesla T4 with the script's mounted-Kaggle CUDA guard active. It verified the frozen CSV SHA-256 (`1baf4a…c8cb0f`), reproduced the 18,446-window parser audit and the v4 metrics, and directly recorded 630 optimizer updates for the final CUDA fit. The temporary validation-fit model's 630 updates are derived from its sample count and fixed loop, not emitted as a separate counter. The selected Extra Trees checkpoint SHA-256 is identical to v4. V5 made no architecture, hyperparameter, or model-selection changes; because the same animal holdout and candidate families had already been inspected, the rerun is reproducibility evidence only, not independent validation or acceptance evidence. See the aggregate [v5 run manifest](experiments/cow-ring-kaggle-v5-manifest.json); weights, full evaluation JSON, and logs remain private in Kaggle.
+
 ## Local run
 
 ```bash
