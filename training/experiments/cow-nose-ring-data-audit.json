@@ -111,5 +111,30 @@
       "exploratory_only": true
     },
     "note": "Preprocessing audit locally extracted 18,446 windows, and Kaggle v4/v5 reproduced these aggregate parser diagnostics and completed training. V5 verified the pinned source hash, required CUDA, confirmed Tesla T4, and logged 630 optimizer updates for the final fit (the validation-fit count is inferred). Holdout/candidate comparisons are exploratory because animals and model families were previously inspected. See the v5 run manifest for aggregate metrics and output hashes."
+  },
+  "leave_one_animal_out_v6": {
+    "run_manifest": "cow-ring-kaggle-loso-v6-manifest.json",
+    "kernel_slug": "pascalcoimbra/campo-vivo-cow-activity-loso-v6-exploratory",
+    "kaggle_kernel_version": 7,
+    "status": "COMPLETE on Tesla T4; exploratory post-selection",
+    "source_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "source_hash_verified": true,
+    "outer_folds": 7,
+    "macro_f1_mean_sd_by_animal": {
+      "extra_trees_v5_frozen": [0.48988680518228256, 0.06900622453227212],
+      "torch_mlp_cuda_v5_frozen": [0.4708487546165531, 0.0583284418011545]
+    },
+    "class_support": {
+      "feeding": {"windows": 5594, "folds_with_support": 7},
+      "rumination": {"windows": 4157, "folds_with_support": 7},
+      "standing": {"windows": 18, "folds_with_support": 5},
+      "lying": {"windows": 37, "folds_with_support": 6},
+      "walking": {"windows": 8640, "folds_with_support": 7}
+    },
+    "training_labels_absent_by_fold": 0,
+    "cuda_optimizer_steps_total": 4995,
+    "output_sha256": "4d382ac2d34b6dc0d89145c5a72d45eea669327ee05bf39211b72e2b7a28cbe3",
+    "kernel_log_sha256": "06cda235b8180454d2f2ee629f2688e300fbe446a54795d833e271346a81d75e",
+    "exploratory_only": true
   }
 }

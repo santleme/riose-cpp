@@ -176,7 +176,7 @@ def main() -> None:
             "Activities are observed labels, not latent need, physiological state, or causal response.",
         ],
         "source_script_sha256": sha256_file(source_script),
-        "base_training_script_sha256": sha256_file(base_script),
+        "base_training_script_sha256": getattr(train, "BASE_V5_SOURCE_SHA256", sha256_file(base_script)),
     }
     output_path = args.output_dir / "loso-evaluation.json"
     output_path.write_text(json.dumps(manifest, indent=2) + "\n")
