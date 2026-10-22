@@ -103,9 +103,11 @@ export class FarmRenderer {
 
   draw(now:number){
     this.lastTime=now;const c=this.ctx,w=this.width,h=this.height,t=now/1000;
+    if(this.selectedId){const followed=this.sim.animals.find(a=>a.id===this.selectedId);if(followed){const p=this.project(followed.x,followed.y);this.panX+=(w*.5-p.x)*.045;this.panY+=(h*.5-p.y)*.045;}}
     c.clearRect(0,0,w,h);this.drawHorizon(t);
     if(this.farmLandscape){
       this.drawFarmLandscape();
+      this.drawPondShimmer(t);
       for(const animal of [...this.sim.animals].sort((a,b)=>a.x+a.y-(b.x+b.y)))this.drawAnimal(animal,t);
       this.drawRain(t);this.stepCameraKeys();return;
     }
@@ -128,6 +130,16 @@ export class FarmRenderer {
     const unitX=Math.min(this.width*.47,this.height*.42*1.79),unitY=unitX/1.79;
     const x=cx-unitX*this.zoom+this.panX,y=cy-unitY*this.zoom+this.panY;
     this.ctx.drawImage(this.farmLandscape,x,y,unitX*2*this.zoom,unitY*2*this.zoom);
+  }
+
+  private drawPondShimmer(t:number){
+    const p=this.project(.9,.7),s=this.visualScale,c=this.ctx;
+    c.save();c.translate(p.x,p.y);c.strokeStyle='rgba(211,245,219,.36)';c.lineWidth=Math.max(1,s);
+    for(let i=0;i<3;i++){
+      const phase=(t*.28+i/3)%1,rx=(5+phase*22)*s,ry=(2+phase*8)*s;
+      c.globalAlpha=(1-phase)*.55;c.beginPath();c.ellipse((i-1)*9*s,Math.sin(t*1.2+i)*2*s,rx,ry,-.14,Math.PI*1.08,Math.PI*1.9);c.stroke();
+    }
+    c.restore();
   }
 
   private drawHorizon(t:number){

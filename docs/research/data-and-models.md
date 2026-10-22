@@ -78,7 +78,7 @@ Métricas: macro-F1 e balanced accuracy (principais), recall e precisão por cla
 
 ## Execução em Kaggle e próximos experimentos
 
-Nesta máquina há CLI, mas não credenciais configuradas e a API não foi autenticada; sem isso não é possível iniciar notebook ou usar GPU Kaggle. Também não fiz download, pois os pacotes grandes variam de 8 GB a terabytes. Quando houver sessão Kaggle autenticada, a sequência recomendada é:
+Um primeiro experimento já foi executado em Kaggle com GPU T4, descrito em [`training/README.md`](../../training/README.md) e reproduzível em [`training/train.py`](../../training/train.py). Ele usa o conjunto CC0 de acelerômetro de argola nasal (7 vacas, 10 Hz) e compara classificadores para atividade observada. O holdout de uma única vaca é apenas exploratório, não valida uma política biológica. Os datasets maiores de 8 GB a terabytes ainda não foram baixados. Próximos passos recomendados:
 
 1. Notebook versionado fixa versão/DOI, hashes, licença, ontologia, sementes e ambiente; baixa somente dados que cabem na quota/storage temporário.
 2. Smoke test em AcTBeCalf e um subconjunto de Precision Beef: parser, alinhamento, distribuição por sujeito/classe, split, baseline de persistência e RF. Salvar logs e não apenas weights.

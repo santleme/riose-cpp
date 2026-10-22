@@ -18,7 +18,7 @@ const smooth=(x:number,edge0:number,edge1:number)=>{const t=clamp((x-edge0)/(edg
 const duration:Record<AnimalAction,number>={graze:.35,drink:.08,seekShade:.3,followHerd:.18,rest:.45};
 
 export function chooseBehavior(o:BehaviorObservation):BehaviorDecision{
-  const h=clamp(o.hunger/100),th=clamp(o.thirst/100),heat=clamp(o.heatLoad/18),fatigue=clamp(o.fatigue/100);
+  const h=clamp(o.hunger/100),th=clamp(o.thirst/100),heat=clamp(o.heatLoad/10),fatigue=clamp(o.fatigue/100);
   const separated=smooth(o.distanceToHerd,.06,.3);
   const closeToWater=1-smooth(o.distanceToWater,.02,.5);
   const closeToShade=1-smooth(o.distanceToShade,.02,.32);
