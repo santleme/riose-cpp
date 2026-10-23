@@ -1,0 +1,112 @@
+[{"stream_name":"stdout","time":6.458664536,"data":"{\n"}
+,{"stream_name":"stdout","time":6.458707072,"data":"  \"experiment\": \"nelore_ufms_prospective_adg_rolling_origin_v1\",\n"}
+,{"stream_name":"stdout","time":6.458713081,"data":"  \"results\": {\n"}
+,{"stream_name":"stdout","time":6.458717427,"data":"    \"training_mean\": {\n"}
+,{"stream_name":"stdout","time":6.45872161,"data":"      \"n\": 234,\n"}
+,{"stream_name":"stdout","time":6.458725772,"data":"      \"mae_kg_per_day\": 0.4622194768961041,\n"}
+,{"stream_name":"stdout","time":6.458730136,"data":"      \"rmse_kg_per_day\": 0.5781215501661331,\n"}
+,{"stream_name":"stdout","time":6.458734261,"data":"      \"bias_kg_per_day\": 0.29423154231808085,\n"}
+,{"stream_name":"stdout","time":6.458738854,"data":"      \"r2\": -0.3564012661994682,\n"}
+,{"stream_name":"stdout","time":6.458743101,"data":"      \"period_mae_kg_per_day\": {\n"}
+,{"stream_name":"stdout","time":6.458747324,"data":"        \"7\": 0.3462763313609468,\n"}
+,{"stream_name":"stdout","time":6.458751771,"data":"        \"8\": 0.5374620315581854,\n"}
+,{"stream_name":"stdout","time":6.458755904,"data":"        \"9\": 0.2931923076923077,\n"}
+,{"stream_name":"stdout","time":6.4587601,"data":"        \"10\": 0.4298224852071006,\n"}
+,{"stream_name":"stdout","time":6.458764316,"data":"        \"11\": 0.551301775147929,\n"}
+,{"stream_name":"stdout","time":6.458768268,"data":"        \"12\": 0.8192331360946745,\n"}
+,{"stream_name":"stdout","time":6.458772386,"data":"        \"13\": 0.5153461538461538,\n"}
+,{"stream_name":"stdout","time":6.458776849,"data":"        \"14\": 0.33599309664694277,\n"}
+,{"stream_name":"stdout","time":6.458781198,"data":"        \"15\": 0.3313479745106965\n"}
+,{"stream_name":"stdout","time":6.458785885,"data":"      }\n"}
+,{"stream_name":"stdout","time":6.458789672,"data":"    },\n"}
+,{"stream_name":"stdout","time":6.458793586,"data":"    \"ridge_start_state_and_previous_adg\": {\n"}
+,{"stream_name":"stdout","time":6.458797467,"data":"      \"n\": 234,\n"}
+,{"stream_name":"stdout","time":6.458801492,"data":"      \"mae_kg_per_day\": 0.4311093795644498,\n"}
+,{"stream_name":"stdout","time":6.458816527,"data":"      \"rmse_kg_per_day\": 0.5259855898513739,\n"}
+,{"stream_name":"stdout","time":6.458820793,"data":"      \"bias_kg_per_day\": 0.029424891021322928,\n"}
+,{"stream_name":"stdout","time":6.458824942,"data":"      \"r2\": -0.1227874815360892,\n"}
+,{"stream_name":"stdout","time":6.458829265,"data":"      \"period_mae_kg_per_day\": {\n"}
+,{"stream_name":"stdout","time":6.458833613,"data":"        \"7\": 0.3910779741760951,\n"}
+,{"stream_name":"stdout","time":6.458837994,"data":"        \"8\": 0.5130392563006236,\n"}
+,{"stream_name":"stdout","time":6.458841873,"data":"        \"9\": 0.26555713804372005,\n"}
+,{"stream_name":"stdout","time":6.458846093,"data":"        \"10\": 0.3474522964163534,\n"}
+,{"stream_name":"stdout","time":6.458850515,"data":"        \"11\": 0.4099590763289792,\n"}
+,{"stream_name":"stdout","time":6.458854525,"data":"        \"12\": 0.5096121319861846,\n"}
+,{"stream_name":"stdout","time":6.4588587969999995,"data":"        \"13\": 0.31596452106001216,\n"}
+,{"stream_name":"stdout","time":6.458862774,"data":"        \"14\": 0.4768658257514034,\n"}
+,{"stream_name":"stdout","time":6.458866939,"data":"        \"15\": 0.6504561960166761\n"}
+,{"stream_name":"stdout","time":6.458870896,"data":"      },\n"}
+,{"stream_name":"stdout","time":6.4588746839999995,"data":"      \"paired_period_bootstrap_vs_baselines\": {\n"}
+,{"stream_name":"stdout","time":6.458878643,"data":"        \"training_mean\": {\n"}
+,{"stream_name":"stdout","time":6.458897489,"data":"          \"test_periods_n\": 9,\n"}
+,{"stream_name":"stdout","time":6.458901569,"data":"          \"periods\": [\n"}
+,{"stream_name":"stdout","time":6.458905767,"data":"            7,\n"}
+,{"stream_name":"stdout","time":6.458909783,"data":"            8,\n"}
+,{"stream_name":"stdout","time":6.458913883,"data":"            9,\n"}
+,{"stream_name":"stdout","time":6.458917574,"data":"            10,\n"}
+,{"stream_name":"stdout","time":6.458921269,"data":"            11,\n"}
+,{"stream_name":"stdout","time":6.458925182,"data":"            12,\n"}
+,{"stream_name":"stdout","time":6.458929572,"data":"            13,\n"}
+,{"stream_name":"stdout","time":6.458933823,"data":"            14,\n"}
+,{"stream_name":"stdout","time":6.458937584,"data":"            15\n"}
+,{"stream_name":"stdout","time":6.458941862,"data":"          ],\n"}
+,{"stream_name":"stdout","time":6.458946146,"data":"          \"mean_period_mae_difference_model_minus_baseline\": -0.031110097331654367,\n"}
+,{"stream_name":"stdout","time":6.458950479,"data":"          \"bootstrap_95ci_equal_weight_periods\": [\n"}
+,{"stream_name":"stdout","time":6.4589552,"data":"            -0.14062303680142166,\n"}
+,{"stream_name":"stdout","time":6.458959094,"data":"            0.08866708731655461\n"}
+,{"stream_name":"stdout","time":6.458963478,"data":"          ],\n"}
+,{"stream_name":"stdout","time":6.458967473,"data":"          \"seed\": 20261023,\n"}
+,{"stream_name":"stdout","time":6.458972056,"data":"          \"replicates\": 10000,\n"}
+,{"stream_name":"stdout","time":6.458976338,"data":"          \"effective_clusters_note\": \"Period clusters share a single herd, paddock, and management context; this interval is exploratory, not farm-level uncertainty.\"\n"}
+,{"stream_name":"stdout","time":6.458981236,"data":"        },\n"}
+,{"stream_name":"stdout","time":6.458985049,"data":"        \"previous_adg_persistence\": {\n"}
+,{"stream_name":"stdout","time":6.458989019,"data":"          \"test_periods_n\": 9,\n"}
+,{"stream_name":"stdout","time":6.458993429,"data":"          \"periods\": [\n"}
+,{"stream_name":"stdout","time":6.459000126,"data":"            7,\n"}
+,{"stream_name":"stdout","time":6.459004412,"data":"            8,\n"}
+,{"stream_name":"stdout","time":6.459008371,"data":"            9,\n"}
+,{"stream_name":"stdout","time":6.45901219,"data":"            10,\n"}
+,{"stream_name":"stdout","time":6.459015921,"data":"            11,\n"}
+,{"stream_name":"stdout","time":6.459019668,"data":"            12,\n"}
+,{"stream_name":"stdout","time":6.459023469,"data":"            13,\n"}
+,{"stream_name":"stdout","time":6.459027865,"data":"            14,\n"}
+,{"stream_name":"stdout","time":6.459031059,"data":"            15\n"}
+,{"stream_name":"stdout","time":6.459052279,"data":"          ],\n"}
+,{"stream_name":"stdout","time":6.459056847,"data":"          \"mean_period_mae_difference_model_minus_baseline\": -0.13012566317059301,\n"}
+,{"stream_name":"stdout","time":6.459061558,"data":"          \"bootstrap_95ci_equal_weight_periods\": [\n"}
+,{"stream_name":"stdout","time":6.459065788,"data":"            -0.2333951227544929,\n"}
+,{"stream_name":"stdout","time":6.459069781,"data":"            -0.0389770537839455\n"}
+,{"stream_name":"stdout","time":6.459073882,"data":"          ],\n"}
+,{"stream_name":"stdout","time":6.459078172,"data":"          \"seed\": 20261023,\n"}
+,{"stream_name":"stdout","time":6.459082411,"data":"          \"replicates\": 10000,\n"}
+,{"stream_name":"stdout","time":6.459091242,"data":"          \"effective_clusters_note\": \"Period clusters share a single herd, paddock, and management context; this interval is exploratory, not farm-level uncertainty.\"\n"}
+,{"stream_name":"stdout","time":6.459096086,"data":"        }\n"}
+,{"stream_name":"stdout","time":6.459100278,"data":"      }\n"}
+,{"stream_name":"stdout","time":6.459104146,"data":"    },\n"}
+,{"stream_name":"stdout","time":6.459108322,"data":"    \"previous_adg_persistence\": {\n"}
+,{"stream_name":"stdout","time":6.459112395,"data":"      \"n\": 234,\n"}
+,{"stream_name":"stdout","time":6.459116747,"data":"      \"mae_kg_per_day\": 0.5612350427350428,\n"}
+,{"stream_name":"stdout","time":6.459121073,"data":"      \"rmse_kg_per_day\": 0.7030097353765367,\n"}
+,{"stream_name":"stdout","time":6.45912539,"data":"      \"bias_kg_per_day\": -0.014568376068376064,\n"}
+,{"stream_name":"stdout","time":6.459129551,"data":"      \"r2\": -1.0057303583301351,\n"}
+,{"stream_name":"stdout","time":6.459133746,"data":"      \"period_mae_kg_per_day\": {\n"}
+,{"stream_name":"stdout","time":6.459138115,"data":"        \"7\": 0.45369230769230773,\n"}
+,{"stream_name":"stdout","time":6.459141993,"data":"        \"8\": 0.6300384615384615,\n"}
+,{"stream_name":"stdout","time":6.459146612,"data":"        \"9\": 0.6982692307692309,\n"}
+,{"stream_name":"stdout","time":6.459150792,"data":"        \"10\": 0.4792307692307692,\n"}
+,{"stream_name":"stdout","time":6.459154996,"data":"        \"11\": 0.519576923076923,\n"}
+,{"stream_name":"stdout","time":6.4591589,"data":"        \"12\": 0.49976923076923074,\n"}
+,{"stream_name":"stdout","time":6.459163212,"data":"        \"13\": 0.6496923076923077,\n"}
+,{"stream_name":"stdout","time":6.459167386,"data":"        \"14\": 0.5390769230769231,\n"}
+,{"stream_name":"stdout","time":6.459171324,"data":"        \"15\": 0.5817692307692308\n"}
+,{"stream_name":"stdout","time":6.459175156,"data":"      }\n"}
+,{"stream_name":"stdout","time":6.459179476,"data":"    }\n"}
+,{"stream_name":"stdout","time":6.459183597,"data":"  }\n"}
+,{"stream_name":"stdout","time":6.459187751,"data":"}\n"}
+,{"stream_name":"stderr","time":9.794215121,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":9.794253436,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":10.200168171,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":10.200198968,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":12.246203205,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":13.635434753,"data":"[NbConvertApp] Writing 339381 bytes to __results__.html\n"}
+]

@@ -1,0 +1,53 @@
+{
+  "kernel": "pascalcoimbra/campo-vivo-adg-prospective-v1",
+  "kernel_version": 2,
+  "kernel_visibility": "private",
+  "kernel_status": "COMPLETE",
+  "dataset": "pascalcoimbra/campo-vivo-nelore-ufms-v7",
+  "dataset_visibility": "private",
+  "source_dataset_doi": "10.17632/3wdjvxmvsp.7",
+  "source_dataset_version": 7,
+  "source_dataset_license": "CC BY 4.0",
+  "source_csv_sha256": "300e274f497d6a19f4f2f9df69cf6dcb0dff03aac8c59cee799bd45404769e24",
+  "submitted_script_sha256": "6616fdcd378336ca5e557c5854cd3d3bd5cc2ff83a27114b47a036d4df157877",
+  "submitted_metadata_sha256": "33ac493070936969752003be2c0ddc3aba81674a5463490a76f2b3ea8ed526fd",
+  "requested_accelerator": "none",
+  "estimator_compute_device": "cpu",
+  "status": "COMPLETE",
+  "attempt_history": [
+    {
+      "kernel_version": 1,
+      "status": "ERROR",
+      "reason": "The script assumed the Kaggle input folder slug; the attached CSV existed under a different mount path."
+    },
+    {
+      "kernel_version": 2,
+      "status": "COMPLETE",
+      "note": "Resolves the pinned filename recursively under /kaggle/input and verifies the release SHA-256 before evaluation."
+    }
+  ],
+  "reproducibility": {
+    "local_and_kaggle_metrics_match_within_1e-12": true,
+    "metric_max_abs_difference": 1.1102230246251565e-15,
+    "note": "Kaggle uses CPU because the fixed sklearn regressors and 390 rows do not benefit from a GPU; Kaggle is the reproducible execution environment, not an accelerator claim."
+  },
+  "outputs": {
+    "manifest.json": {
+      "sha256": "a91e8e6e3ec03e61bdb4da3049395c44295b974a925ff1bc82a9fc5a52cbe06e",
+      "bytes": 12140
+    },
+    "prospective_adg_ridge.joblib": {
+      "sha256": "31ad8f2e6ab3071693cc88eed74cc71e2e5e63df2857a9efd2891f59616bb5c2",
+      "bytes": 986
+    },
+    "campo-vivo-adg-prospective-v1.log": {
+      "sha256": "8d557fa030df1d7a69d388bd40dfc8e1e4dbc38bae9468be03af0790f19b1222",
+      "bytes": 10058
+    }
+  },
+  "acceptance": {
+    "criteria": "at least 10% MAE improvement against the strongest predeclared baseline with the paired period-bootstrap interval excluding zero",
+    "result": "FAIL",
+    "reason": "Ridge improves MAE 6.7% versus the stronger pooled baseline (training mean); paired period-bootstrap 95% CI for model-minus-baseline MAE is [-0.141, 0.089] kg/day and crosses zero."
+  }
+}

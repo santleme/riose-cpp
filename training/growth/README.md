@@ -63,3 +63,28 @@ The Kaggle runtime requested a T4, but this baseline consists of scikit-learn ta
 Rows repeat the same weather, pasture and supplementation context for all cattle in a period; thus environmental effects have roughly 15 period-level units, not 390 independent observations. There is one herd/paddock, no external farm, and no randomized intervention identifiable from this table. Use the predictions as a benchmark adapter, not as established BR-CORTE or NASEM physiology. The next useful data would be an independent herd or paddock with measured body weight, forage mass/composition, actual supplement intake and prospective weather; validate by holding out both farm and time. A mechanistic growth/nutrient balance must remain separately versioned and calibrated.
 
 The private Kaggle kernel and private verified input mirror were used for this run. Credentials and remote access tokens are not included in this repository. The local command below can reproduce the same split and metrics from the canonical public Mendeley v7 file.
+
+## Prospective prediction experiment
+
+`train_growth_prospective.py` separates prediction from the interval-conditioned nowcast above. Each fold trains on earlier complete periods and predicts the next whole period. Features are restricted to starting body weight, the scheduled interval duration, calendar season, and the immediately previous measured ADG, which is admitted only when that prior period ends exactly at the current start date. Interval weather, vegetation indices, realized supplementation, feeder visits, final weight, and the target itself are excluded from the current feature vector.
+
+The fixed Ridge candidate is compared to two predeclared baselines: training-period mean and previous-period ADG persistence. It reports per-period MAE and a paired bootstrap over period clusters; the latter is exploratory because all periods belong to one herd and paddock. It is not an independent-farm uncertainty interval and cannot support causal claims. The fit uses the 390-row UFMS v7 data but only nine later period contexts are tested; if its interval against the strongest baseline crosses zero or improvements are below 10%, it fails the proposed acceptance gate.
+
+The first complete prospective Kaggle run (private kernel version 2, CPU) reproduced the local results to a maximum absolute metric difference of `1.2e-15`. Ridge reached MAE `0.431 kg/d`, versus `0.462 kg/d` for the stronger pooled baseline (training mean) and `0.561 kg/d` for previous-ADG persistence. The relative improvement over the strongest baseline is only 6.7%; the paired period-bootstrap 95% CI for MAE difference is `[-0.141, 0.089] kg/d`, crossing zero. It therefore **fails** the proposed acceptance gate and must not be integrated as an accepted growth model. Its future-period R² is `−0.123`. The exact output, checkpoint, log, source hashes and failed first attempt are preserved under [`runs/kaggle-prospective-v2/`](runs/kaggle-prospective-v2/).
+
+Local reproduction:
+
+```bash
+python training/growth/train_growth_prospective.py \
+  --data .cache/nelore-growth/Complete_Dataset.csv \
+  --output-dir training/growth/runs/prospective-adg-v1
+```
+
+Kaggle execution uses a private, SHA-verified mirror and disables GPU because the fixed tabular regressors are tiny CPU workloads:
+
+```bash
+mkdir -p /tmp/campo-vivo-growth-prospective
+cp training/growth/train_growth_prospective.py /tmp/campo-vivo-growth-prospective/
+cp training/growth/kaggle-prospective/kernel-metadata.json /tmp/campo-vivo-growth-prospective/kernel-metadata.json
+kaggle kernels push -p /tmp/campo-vivo-growth-prospective
+```
