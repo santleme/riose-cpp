@@ -1,0 +1,153 @@
+{
+  "experiment": "CNR to AcTBeCalf frozen external activity transfer",
+  "protocol_version": 1,
+  "status": "complete_negative_transfer_result",
+  "interpretation": "Do not integrate either classifier as a cattle behavior policy or runtime brain. Both models exactly matched the CNR-train-majority baseline on the coarse external test by predicting other for every window.",
+  "kaggle": {
+    "kernel": "pascalcoimbra/campo-vivo-cnr-to-actbecalf-external-transfer-v1",
+    "kernel_version": 3,
+    "visibility": "private",
+    "status": "COMPLETE",
+    "accelerator": "Tesla T4",
+    "cuda_required_and_available": true,
+    "mlp_optimizer_steps": 630,
+    "submitted_bundle_sha256": "c1cea8d23f0ce0523f8be133ea06ea6cbfe4851ace458b8edaa9dc19c1d4cafe",
+    "attempt_history": [
+      {
+        "kernel_version": 1,
+        "status": "ERROR",
+        "reason": "The generated single-file bundle executed the data loader main() at import time and exited while requesting CLI arguments; no training took place."
+      },
+      {
+        "kernel_version": 2,
+        "status": "COMPLETE",
+        "note": "Initial result confirmed both candidates predicted only other; the explicit training-majority baseline and prediction-count report were added for version 3."
+      },
+      {
+        "kernel_version": 3,
+        "status": "COMPLETE",
+        "note": "Frozen candidates plus training-majority baseline; primary recorded run."
+      }
+    ]
+  },
+  "training_data": {
+    "name": "Kaggle Cow Nose Ring Data Set",
+    "slug": "fandaoerji/cow-nose-ring-data-set",
+    "license": "CC0-1.0",
+    "csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "held_out_cnr_animal_excluded_from_fit": "6",
+    "animals_in_fit": 6,
+    "fit_windows": 14231,
+    "coarse_class_counts": {
+      "feeding": 3608,
+      "rumination": 3259,
+      "other": 7364
+    },
+    "majority_baseline_class": "other"
+  },
+  "external_test": {
+    "name": "AcTBeCalf official Zenodo v1.0",
+    "doi": "10.5281/zenodo.13259482",
+    "license": "CC-BY-4.0",
+    "csv_sha256": "1aec91cc9454919e865be204d503899a89ebdba3ca5f81ee2cb22942f456f26d",
+    "animals": 30,
+    "source_rows": 2467162,
+    "segments": 4016,
+    "timestamp_gap_splits": 24,
+    "accepted_windows": 17699,
+    "coarse_class_counts": {
+      "feeding": 2745,
+      "rumination": 127,
+      "other": 14827
+    },
+    "supported_animals_by_class": {
+      "feeding": 26,
+      "rumination": 6,
+      "other": 30
+    }
+  },
+  "frozen_models": {
+    "training_majority_baseline": {
+      "pooled_macro_f1": 0.3039004693680953,
+      "pooled_weighted_f1": 0.7637604823980024,
+      "per_animal_mean_supported_class_macro_f1": 0.47674922200692044,
+      "per_animal_sd": 0.20019556236006023,
+      "pooled_animal_cluster_bootstrap_95ci": [0.2905124264294071, 0.31556123707062234],
+      "per_animal_mean_cluster_bootstrap_95ci": [0.4094684123797518, 0.5527812510167364],
+      "predicted_windows": {
+        "feeding": 0,
+        "rumination": 0,
+        "other": 17699
+      }
+    },
+    "extra_trees_v5_frozen": {
+      "pooled_macro_f1": 0.3039004693680953,
+      "pooled_weighted_f1": 0.7637604823980024,
+      "per_animal_mean_supported_class_macro_f1": 0.47674922200692044,
+      "per_animal_sd": 0.20019556236006023,
+      "pooled_animal_cluster_bootstrap_95ci": [0.2905124264294071, 0.31556123707062234],
+      "per_animal_mean_cluster_bootstrap_95ci": [0.4094684123797518, 0.5527812510167364],
+      "predicted_windows": {
+        "feeding": 0,
+        "rumination": 0,
+        "other": 17699
+      },
+      "class_f1": {
+        "feeding": 0.0,
+        "rumination": 0.0,
+        "other": 0.9117014081042858
+      }
+    },
+    "torch_mlp_v5_frozen": {
+      "pooled_macro_f1": 0.3039004693680953,
+      "pooled_weighted_f1": 0.7637604823980024,
+      "per_animal_mean_supported_class_macro_f1": 0.47674922200692044,
+      "per_animal_sd": 0.20019556236006023,
+      "pooled_animal_cluster_bootstrap_95ci": [0.2905124264294071, 0.31556123707062234],
+      "per_animal_mean_cluster_bootstrap_95ci": [0.4094684123797518, 0.5527812510167364],
+      "predicted_windows": {
+        "feeding": 0,
+        "rumination": 0,
+        "other": 17699
+      },
+      "class_f1": {
+        "feeding": 0.0,
+        "rumination": 0.0,
+        "other": 0.9117014081042858
+      }
+    }
+  },
+  "window_and_label_protocol": {
+    "window_seconds": 5,
+    "cnr_sampling_hz": 10,
+    "actbecalf_sampling_hz": 25,
+    "feature_count": 18,
+    "actbecalf_mapping": {
+      "eating_and_observed_modifiers": "feeding",
+      "rumination_and_rumination_lying": "rumination",
+      "all_other_observed_ethogram_labels": "other"
+    },
+    "split": "CNR animal 6 excluded from fitting; external AcTBeCalf animals are used only for test; windows do not cross animal, segment, or timestamp gap.",
+    "bootstrap": "2,000 resamples of calves as groups, separately for pooled and mean per-calf estimands; seed 20261022"
+  },
+  "source_hashes": {
+    "base_training_parser": "16b021f87e1f5e08be73fa0a49cffabd25be3b3e1efe0d732a6c1e1fb8cd41e0",
+    "actbecalf_loader": "09d4d41c327fe9a2305b8f97d07338d0a006a9073405f20c73c4206a71439fe4",
+    "transfer_runner": "72d1a079a3aee715974199b7d8536fcb9a966202b320fbcb1da0ec16e914a8d1"
+  },
+  "private_artifact_hashes_not_committed": {
+    "actbecalf-transfer-extra-trees.joblib": "d53ae846713bfeb95ca8efed02168d8a8b18f3233bffc454faf1191ea52b87d2",
+    "actbecalf-transfer-mlp.pt": "e735507d9fe7aad368d1e8f1bf915127e347c42eacfbe6285779c0375d6c385f",
+    "manifest.json": "d91b616e2d63616b8e429f797c2b795c7a8083e7a56850df46d137e5615eb673",
+    "kernel_log": "4c4cbd51c8a1d4d39883b7c4a2ec3ac3ab6e37035d3d8e899884c395cf069581"
+  },
+  "limitations": [
+    "One external farm/cohort; this does not establish farm-level generalization.",
+    "Pre-weaned dairy calves vs adult cattle, breed, sensor position, sampling frequency, and management differ together.",
+    "The 27.4 annotated hours were selected to include active bouts and do not estimate daily behavior prevalence.",
+    "Only 127 rumination windows from six calves occur in the mapped external test.",
+    "The coarse three-class ontology maps milk/water drinking, posture, locomotion, play, and social behaviors to other.",
+    "The source model families were previously inspected on CNR data; this frozen external run is exploratory and not independent model selection.",
+    "This classifies accelerometer windows and is not an autonomous agent, physiology model, management response model, or causal estimate."
+  ]
+}

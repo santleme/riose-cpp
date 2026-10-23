@@ -114,6 +114,53 @@
       "published_sheets_reported": ["Drinking behaviour", "Dry matter intake", "Liveweight", "Weather"],
       "known_variables": ["individual water intake, visit time and duration", "individual daily dry matter intake", "liveweight at six timepoints", "air temperature, relative humidity, wind speed, solar radiation, temperature-humidity index"],
       "limitations": ["shade treatment is allocated at group/pen level, with only four pens; animal records do not constitute 47 independent treatment replicates", "treatment-level causal estimates require pen-aware analysis and careful uncertainty; avoid animal-level pseudoreplication", "one water trough was located in the sunny area of each pen", "feedlot total mixed ration is not extensive grazing"]
+    },
+    {
+      "id": "actbecalf-accelerometer-2024",
+      "priority": "external-activity-transfer-only",
+      "title": "Accelerometer-Based Multivariate Time-Series Dataset for Calf Behavior Classification",
+      "source": "Zenodo",
+      "doi": "10.5281/zenodo.13259482",
+      "version": "1.0",
+      "source_url": "https://zenodo.org/records/13259482",
+      "api_url": "https://zenodo.org/api/records/13259482",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "access": "Official Zenodo API record declares open access and CC BY 4.0; use its AcTBeCalf.csv file, not the unverified Kaggle mirror whose license is Unknown.",
+      "file": {
+        "name": "AcTBeCalf.csv",
+        "bytes": 177608717,
+        "md5": "59bd00564af64d92489485fa5a8a3960",
+        "sha256": "1aec91cc9454919e865be204d503899a89ebdba3ca5f81ee2cb22942f456f26d",
+        "rows": 2467162,
+        "columns": ["dateTime", "calfId", "accX", "accY", "accZ", "behaviour", "segId"],
+        "sampling_hz": 25
+      },
+      "study": {
+        "animals": 30,
+        "population": "pre-weaned Holstein Friesian and Jersey calves",
+        "site": "Teagasc Moorepark Research Farm, Ireland",
+        "pens": 4,
+        "labeled_observation_hours": 27.4,
+        "mean_labeled_hours_per_animal": 0.91,
+        "mean_age_at_annotation_days": 23.7,
+        "ethogram_categories": 23,
+        "observed_categories": 21,
+        "sensor": "AX3 triaxial accelerometer on neck collar"
+      },
+      "intended_use": "Frozen external-cohort test of accelerometer activity classification only. Five-second windows must not cross calf, segId, or timestamp gaps; map eating and its observed feeding modifiers to coarse feeding, rumination and posture modifiers to rumination, and all other observed composites to other.",
+      "limitations": [
+        "One external farm/cohort cannot estimate across-farm generalization.",
+        "The 27.4 annotated hours were selected from video and include at least one active segment per calf; they do not represent natural daily prevalence or time budgets.",
+        "Calves differ from the adult Nellore CNR cohort in age, breed, site, sensor position and sampling frequency; these shifts are confounded in this external challenge.",
+        "The activity label mapping is a coarse transfer ontology, not a policy/action label or physiological state."
+      ],
+      "attribution": "Dissanayake et al. (2025), ActBeCalf, Data in Brief 60, 111462, DOI 10.1016/j.dib.2025.111462; cite also the dataset DOI and CC BY 4.0 license.",
+      "local_paths": {
+        "official_csv_cache": ".cache/actbecalf/AcTBeCalf.csv",
+        "ingestion": "training/external/actbecalf.py",
+        "transfer_runner": "training/external/train_actbecalf_transfer.py"
+      }
     }
   ]
 }

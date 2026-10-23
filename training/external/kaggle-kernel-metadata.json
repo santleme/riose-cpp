@@ -1,0 +1,17 @@
+{
+  "id": "pascalcoimbra/campo-vivo-cnr-to-actbecalf-external-transfer-v1",
+  "title": "Campo Vivo CNR to ActBeCalf External Transfer v1",
+  "code_file": "train_actbecalf_transfer_bundle.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "false",
+  "dataset_sources": [
+    "fandaoerji/cow-nose-ring-data-set",
+    "pascalcoimbra/campo-vivo-actbecalf-zenodo-v1"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

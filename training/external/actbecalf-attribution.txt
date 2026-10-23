@@ -1,0 +1,6 @@
+External data file: AcTBeCalf.csv, Zenodo record 10.5281/zenodo.13259482, version 1.0.
+Creators: Dissanayake, Oshana; McPherson, Sarah E.; Allyndrée, Joseph; Kennedy, E.; Cunningham, P.; Riaboff, L.
+License reported by Zenodo API metadata: Creative Commons Attribution 4.0 International (CC BY 4.0).
+Citation: Dissanayake et al. (2025), ActBeCalf: Accelerometer-based multivariate time-series dataset for calf behavior classification, Data in Brief 60, 111462, DOI 10.1016/j.dib.2025.111462.
+Source record: https://zenodo.org/records/13259482
+No changes were made to the raw measurements. Campo Vivo derived 5-second window features and coarse labels for an external evaluation.

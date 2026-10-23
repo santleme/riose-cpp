@@ -1,0 +1,10 @@
+{
+  "title": "Campo Vivo ActBeCalf Official Zenodo Release v1",
+  "id": "pascalcoimbra/campo-vivo-actbecalf-zenodo-v1",
+  "licenses": [
+    {"name": "CC-BY-4.0"}
+  ],
+  "keywords": ["cattle", "calf", "accelerometer", "behavior", "external-validation"],
+  "subtitle": "Private CC BY copy for frozen external activity transfer",
+  "description": "Official AcTBeCalf.csv from Zenodo DOI 10.5281/zenodo.13259482, version 1.0. Thirty pre-weaned dairy calves, 25 Hz triaxial neck-collar data, 2,467,162 rows. Source paper: Dissanayake et al. (2025), Data in Brief 60, 111462, DOI 10.1016/j.dib.2025.111462. The Zenodo API declares CC BY 4.0. This private copy exists only to attach the official source data to a Kaggle GPU kernel; no modifications to the raw measurements. The evaluation is an external activity-classification challenge from a single farm, not a decision-policy or daily-prevalence dataset."
+}
