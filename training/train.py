@@ -111,8 +111,8 @@ def _parse_sample_timestamps(frame: pd.DataFrame) -> pd.Series:
 
 
 def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
-                     minimum_label_fraction: float = 0.8
-                     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict]:
+                     minimum_label_fraction: float = 0.8,
+                     include_raw: bool = False):
     """Extract windows only from contiguous, timestamp-verified 10 Hz runs."""
     missing = REQUIRED - set(frame.columns)
     if missing:
@@ -147,6 +147,7 @@ def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
     features: list[np.ndarray] = []
     labels: list[int] = []
     animals: list[str] = []
+    raw_windows: list[np.ndarray] = []
     # Sort within each cow/day because CSV row order is not a sampling guarantee.
     # A source-order diagnostic preserves visibility into shuffled input.
     for (animal, _day), group in frame.groupby(["cow_num", "_day"], sort=True):
@@ -209,10 +210,15 @@ def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
                 features.append(_window_features(acc[start:start + window_samples]))
                 labels.append(int(label))
                 animals.append(animal)
+                if include_raw:
+                    raw_windows.append(acc[start:start + window_samples].copy())
     diagnostics["accepted_windows"] = len(features)
     if not features:
         raise ValueError("No contiguous labeled windows found; check timestamps, 10 Hz sampling, and CSV schema")
-    return np.stack(features), np.asarray(labels), np.asarray(animals), diagnostics
+    result = (np.stack(features), np.asarray(labels), np.asarray(animals), diagnostics)
+    if include_raw:
+        return (*result, np.stack(raw_windows))
+    return result
 
 
 def extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,

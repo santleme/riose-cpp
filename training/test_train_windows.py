@@ -31,6 +31,16 @@ class ExtractWindowsContinuityTests(unittest.TestCase):
         self.assertEqual(animals.tolist(), ["cow-a", "cow-a"])
         self.assertEqual(diag["sampling_gap_breaks"], 0)
 
+    def test_raw_sequences_are_aligned_with_features_labels_and_animals(self):
+        features, labels, animals, _, raw = _extract_windows(
+            rows([0.0, 0.1, 0.2, 0.3]), window_samples=2, include_raw=True,
+        )
+        self.assertEqual(features.shape, (2, 18))
+        self.assertEqual(raw.shape, (2, 2, 3))
+        self.assertEqual(labels.tolist(), [0, 0])
+        self.assertEqual(animals.tolist(), ["cow-a", "cow-a"])
+        np.testing.assert_array_equal(raw[0, :, 0], [0.0, 1.0])
+
     def test_shuffled_rows_are_sorted_before_windowing(self):
         ordered = rows([0.0, 0.1, 0.2, 0.3])
         shuffled = ordered.iloc[[2, 0, 3, 1]].reset_index(drop=True)

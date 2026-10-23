@@ -2,6 +2,19 @@
 
 Reproducible supervised baseline for coarse activity recognition from 3-axis cow IMU signals. It is an observation classifier, **not** a model of motivation, health, welfare, or causal environmental response.
 
+The separate three-class temporal comparison is defined in [the CNR temporal experiment protocol](../docs/research/cow-activity-temporal-experiment-2026-10.md). It compares the existing ExtraTrees feature baseline with a frozen temporal CNN using leave-one-cow-out folds. It shares preprocessing with this baseline and preserves the same scope boundary: observed accelerometer activity classification, not an animal decision policy.
+
+Rebuild and run its private Kaggle GPU kernel with:
+
+```bash
+uv run --with-requirements training/requirements.txt python training/build_activity_tcn_bundle.py
+kaggle kernels push -p training/kernels/cow-activity-temporal-v1
+kaggle kernels status pascalcoimbra/campo-vivo-cow-activity-temporal-cnn-loso-v1
+kaggle kernels output pascalcoimbra/campo-vivo-cow-activity-temporal-cnn-loso-v1 -p training/kaggle-output
+```
+
+The output directory is git-ignored because it contains per-fold checkpoints. Commit the aggregate experiment summary with each completed run; keep raw per-cow scores and logs private unless there is a clear reason to publish them.
+
 ## Data
 
 Default source: [Cow nose ring data set on Kaggle](https://www.kaggle.com/datasets/fandaoerji/cow-nose-ring-data-set). The Kaggle metadata declares **CC0-1.0**. The card describes seven free-moving cows, 10 Hz accelerometer data, 1,252,522 rows, and labels `0 feeding`, `1 rumination`, `2 standing`, `3 lying`, `4 walking`. The downloaded CSV audited on 2026-10-22 has 1,252,536 rows (14 above the card count) and whole-second timestamps. The associated 2024 paper reports eleven study cows and evaluates a three-class ontology (`feeding`, `rumination`, `other`), so the relationship between paper population, Kaggle subset, and five CSV codes remains unresolved. Pin and audit the actual CSV before training; do not treat the paper's metrics as directly comparable to the five-label benchmark. The raw dataset is not committed; fetching is handled by the official Kaggle CLI. [Source paper](https://www.mdpi.com/2076-2615/14/8/1187).

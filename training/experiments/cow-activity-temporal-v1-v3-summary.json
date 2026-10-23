@@ -1,0 +1,84 @@
+{
+  "experiment": "cnr_three_class_temporal_cnn_loso_v1",
+  "kaggle_kernel": "pascalcoimbra/campo-vivo-cow-activity-temporal-cnn-loso-v1",
+  "kaggle_kernel_version": 3,
+  "status": "completed_exploratory_post_selection_no_acceptance_claim",
+  "visibility": "private",
+  "dataset": {
+    "slug": "fandaoerji/cow-nose-ring-data-set",
+    "license": "CC0-1.0",
+    "source_csv_sha256": "1baf4a55433777522bb65022416566f9269ced58b53e0b6746669ee539c8cb0f",
+    "accepted_windows": 18446,
+    "animal_count": 7
+  },
+  "protocol": {
+    "outer_folds": 7,
+    "split": "leave one complete animal out",
+    "classes": ["feeding", "rumination", "other"],
+    "window_samples": 50,
+    "sampling_hz": 10,
+    "model_selection": "none across outer folds"
+  },
+  "runtime": {
+    "device": "cuda",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "optimizer_updates_total": 15260
+  },
+  "aggregate_metrics": {
+    "train_majority": {
+      "macro_f1_mean_by_animal": 0.22254435205916503,
+      "macro_f1_sd_by_animal": 0.03483449894928993
+    },
+    "extra_trees_frozen": {
+      "macro_f1_mean_by_animal": 0.7681154901401027,
+      "macro_f1_sd_by_animal": 0.0841685554685382,
+      "per_class_f1_mean_by_animal": {
+        "feeding": 0.8033802764408138,
+        "rumination": 0.6748350580857524,
+        "other": 0.8261311358937419
+      }
+    },
+    "temporal_cnn_frozen": {
+      "macro_f1_mean_by_animal": 0.7543764811191781,
+      "macro_f1_sd_by_animal": 0.11133794531824416,
+      "per_class_f1_mean_by_animal": {
+        "feeding": 0.804157711485339,
+        "rumination": 0.6508864404045754,
+        "other": 0.8080852914676202
+      },
+      "paired_difference_vs_extra_trees": {
+        "mean_macro_f1": -0.013739009020924444,
+        "standard_deviation": 0.09211295274922149,
+        "descriptive_t_95_percent_interval": [-0.09892928173606286, 0.07145126369421398],
+        "animals": 7
+      }
+    }
+  },
+  "artifacts": {
+    "private_kaggle_outputs": true,
+    "downloaded_local_directory": "training/outputs/activity-tcn-loso-v3/training/outputs/activity-tcn-loso",
+    "checkpoint_count": 7,
+    "checkpoint_sha256s_without_animal_ids": [
+      "c1fda29f36fc038d0e3a9a4ac03699e7854b6d922c372bcd90b100a26acf931b",
+      "e0fe97b322f8ebf3976f1f159f88f20dea5761fbf1b6db1d09ab543236a23c74",
+      "74eda7a0653088e214fd5d03fe0cb27a81b4ed6153d9f3b85d8acb8f84d32cf1",
+      "3cf430df69c8b954a6e20468e4a908ec87ce2167000217f14700a4e75d7edd8d",
+      "cc11da7aec55979b63cea928c77fbc1744dd664b8a4f557a05ceae23d3b5f329",
+      "fcc0f52a10178af1618ad7511fb0bd40d240cd926f0fd97a350510f7ca050bf2",
+      "510dccf5378739238c174cefa59ccbab6ec3b1520267d295d0b722eb5d1fc4f8"
+    ],
+    "evaluation_json_sha256": "f8f9e19fff5f5dca97d1d25a41ccd78b4d4ddd9ccb5202471d635a6bd08320ee",
+    "kaggle_log_sha256": "7b6a35dbf5b939c4733ab787b75186586ebe1af96e88666f741f790260a5497d",
+    "bundle_sha256": "8efc09391952049fd50cc48209a1e35760ca706662c877342e8cb1bcc24b0de0",
+    "base_training_script_sha256": "d7121f1b1eee52132c4a098ae6bc86d3bc2a119d92a5f907583098c8ada68192"
+  },
+  "limitations": [
+    "One small cohort at one farm; not external validation across farms, breeds, sensors, or placement.",
+    "The source CSV has coarse whole-second timestamps; sample order within verified blocks is assumed.",
+    "Other merges walking, standing, and lying; three-class scores do not validate posture classification.",
+    "Temporal CNN did not outperform the frozen ExtraTrees baseline on mean macro-F1 and was less stable across held-out animals.",
+    "Observed activity classification does not estimate motivation, needs, policy, physiology, or response to environmental interventions.",
+    "The fold checkpoints are exploratory leave-one-cow-out artifacts; none is a deployment-ready policy or validated farm-general model."
+  ]
+}

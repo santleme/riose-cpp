@@ -111,8 +111,8 @@ def _parse_sample_timestamps(frame: pd.DataFrame) -> pd.Series:
 
 
 def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
-                     minimum_label_fraction: float = 0.8
-                     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict]:
+                     minimum_label_fraction: float = 0.8,
+                     include_raw: bool = False):
     """Extract windows only from contiguous, timestamp-verified 10 Hz runs."""
     missing = REQUIRED - set(frame.columns)
     if missing:
@@ -147,6 +147,7 @@ def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
     features: list[np.ndarray] = []
     labels: list[int] = []
     animals: list[str] = []
+    raw_windows: list[np.ndarray] = []
     # Sort within each cow/day because CSV row order is not a sampling guarantee.
     # A source-order diagnostic preserves visibility into shuffled input.
     for (animal, _day), group in frame.groupby(["cow_num", "_day"], sort=True):
@@ -209,10 +210,15 @@ def _extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
                 features.append(_window_features(acc[start:start + window_samples]))
                 labels.append(int(label))
                 animals.append(animal)
+                if include_raw:
+                    raw_windows.append(acc[start:start + window_samples].copy())
     diagnostics["accepted_windows"] = len(features)
     if not features:
         raise ValueError("No contiguous labeled windows found; check timestamps, 10 Hz sampling, and CSV schema")
-    return np.stack(features), np.asarray(labels), np.asarray(animals), diagnostics
+    result = (np.stack(features), np.asarray(labels), np.asarray(animals), diagnostics)
+    if include_raw:
+        return (*result, np.stack(raw_windows))
+    return result
 
 
 def extract_windows(frame: pd.DataFrame, window_samples: int = WINDOW_SAMPLES,
@@ -881,7 +887,7 @@ def main() -> None:
                             "animal_mean_ci": result["macro_f1_animal_mean_cluster_bootstrap_95ci"]}
                       for name, result in metrics.items()}, indent=2))
 
-BASE_TRAIN_SOURCE_SHA256 = '16b021f87e1f5e08be73fa0a49cffabd25be3b3e1efe0d732a6c1e1fb8cd41e0'
+BASE_TRAIN_SOURCE_SHA256 = 'd7121f1b1eee52132c4a098ae6bc86d3bc2a119d92a5f907583098c8ada68192'
 ACTBECALF_LOADER_SOURCE_SHA256 = '09d4d41c327fe9a2305b8f97d07338d0a006a9073405f20c73c4206a71439fe4'
 TRANSFER_RUNNER_SOURCE_SHA256 = '72d1a079a3aee715974199b7d8536fcb9a966202b320fbcb1da0ec16e914a8d1'
 
