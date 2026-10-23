@@ -161,6 +161,98 @@
         "ingestion": "training/external/actbecalf.py",
         "transfer_runner": "training/external/train_actbecalf_transfer.py"
       }
+    },
+    {
+      "id": "wvu-individual-beef-water-intake-2019-2024",
+      "priority": "water-intake-literature-only-until-access-granted",
+      "title": "Characterization of individual beef cattle water intake",
+      "source": "Journal of Animal Science / West Virginia University",
+      "doi": "10.1093/jas/skag054",
+      "source_url": "https://academic.oup.com/jas/article/doi/10.1093/jas/skag054/8494533",
+      "published_at": "2026-02-22",
+      "license": "Data license not stated; article license is CC BY-NC-ND 4.0 and must not be assumed to cover raw data",
+      "access": "No individual-level file, repository DOI, supplement, Kaggle mirror, or explicit data-availability statement located in source audit; article reports summary statistics only. Do not ingest or train until authors provide data and reuse terms.",
+      "availability_status": "not_publicly_downloadable_in_audit",
+      "study": {
+        "animals_reported": 2084,
+        "daily_records_reported": "130000+",
+        "breeds_reported": 10,
+        "systems": ["drylot", "grazing"],
+        "measures": ["water intake", "dry matter intake", "body weight", "weather/THI"],
+        "period": "2019-07 through 2024-07",
+        "locations": ["Wardensville, West Virginia", "Morgantown, West Virginia"]
+      },
+      "limitations": [
+        "Study is observational and does not identify causal management effects.",
+        "The authors explicitly report no Bos indicus genetics or warm-season grasses; direct transfer to tropical Nelore is unsupported.",
+        "Grazing observations are crossbred steers only, so grazing behavior cannot be generalized across sex classes from this study.",
+        "The 2024 conference abstract describes an earlier WVU collection period and is not an independent validation cohort.",
+        "Raw-data permission and model-training rights are unknown; the article's CC BY-NC-ND license is not a dataset license."
+      ],
+      "primary_publication": {
+        "title": "Characterization of individual beef cattle water intake",
+        "doi": "10.1093/jas/skag054",
+        "url": "https://doi.org/10.1093/jas/skag054"
+      }
+    },
+    {
+      "id": "wvu-water-intake-lstm-skag138-2026",
+      "priority": "sequence-model-reference-access-by-request",
+      "title": "Predicting individual water intake in beef cattle using longitudinal data and long short-term memory models",
+      "source": "Journal of Animal Science / West Virginia University",
+      "doi": "10.1093/jas/skag138",
+      "source_url": "https://academic.oup.com/jas/article/doi/10.1093/jas/skag138/8665117",
+      "published_at": "2026-04-29",
+      "license": "Training data and model-weight license not stated in the article abstract or catalog; request terms from corresponding author",
+      "access": "Article reports data may be available by contacting the corresponding author. An OUP supplementary DOCX exists, but it is not the animal-level training dataset. No Kaggle/Hugging Face mirror verified.",
+      "availability_status": "request_author_before_reproduction",
+      "study": {
+        "animals_reported": 2268,
+        "target": "daily water intake (L/day)",
+        "model": "LSTM over longitudinal animal, feed, weight, and engineered weather features",
+        "reported_rmse_L_day": 3.85,
+        "reported_r2": 0.74,
+        "external_drylot_rmse_L_day": [4.20, 4.19]
+      },
+      "limitations": [
+        "This is supervised intake forecasting, not a learned decision policy for when or where an animal drinks.",
+        "Performance numbers cannot be independently reproduced without the private/permissioned animal-level data, splits, code, and checkpoint.",
+        "A prediction benchmark does not establish physiological water balance or causal response to water access/shade."
+      ],
+      "primary_publication": {
+        "title": "Predicting individual water intake in beef cattle using longitudinal data and long short-term memory models",
+        "doi": "10.1093/jas/skag138",
+        "url": "https://doi.org/10.1093/jas/skag138"
+      }
+    },
+    {
+      "id": "wvu-grazing-dmi-lstm-skag133-2026",
+      "priority": "sequence-model-reference-access-by-request",
+      "title": "Generalizable long short-term memory models for beef cattle DMI under grazing",
+      "source": "Journal of Animal Science / West Virginia University",
+      "doi": "10.1093/jas/skag133",
+      "source_url": "https://academic.oup.com/jas/article/doi/10.1093/jas/skag133/8675989",
+      "published_at": "2026-04-29",
+      "license": "Underlying animal data and model-weight license not stated as publicly redistributable",
+      "access": "Methods and results are available in the article. Public source data/checkpoint were not identified; treat the reported model as literature, not an available pretrained model.",
+      "availability_status": "not_reproducible_without_data_access",
+      "study": {
+        "model": "3-layer, 256-hidden-unit LSTM with 7-day windows and compact prediction head",
+        "target": "daily dry matter intake (kg/day)",
+        "reported_pooled_rmse_kg_day": 1.329,
+        "validation_domains": ["unseen regional drylot", "unseen non-regional drylot", "held-out animals in 2023 grazing cohort"]
+      },
+      "limitations": [
+        "DMI prediction uses measured water intake as an input and does not model a drinking or grazing choice policy.",
+        "The grazing holdout is an animal-identity holdout within the same Wardensville grazing site/year, not an unseen grazing farm.",
+        "The paper describes short-gap forward/backward filling; backward filling is retrospective and must be removed/retested for strict online forecasting.",
+        "The model's reported performance cannot be independently validated in Campo Vivo without data, code, and frozen artifacts."
+      ],
+      "primary_publication": {
+        "title": "Generalizable long short-term memory models for beef cattle DMI under grazing",
+        "doi": "10.1093/jas/skag133",
+        "url": "https://doi.org/10.1093/jas/skag133"
+      }
     }
   ]
 }
